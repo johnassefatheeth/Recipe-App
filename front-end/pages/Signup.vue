@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="w-full h-screen justify-center  items-center bg-stone-700">
+    <div class="w-96 h-96 flex-col justify-center items-center bg-stone-500"> 
     <h1>Signup</h1>
     <form @submit.prevent="signup">
       <label>
@@ -12,6 +13,7 @@
       </label>
       <button type="submit">Signup</button>
     </form>
+  </div>
   </div>
 </template>
 
