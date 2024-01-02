@@ -1,5 +1,6 @@
 <template>
-    <div class="w-1/2 bg-zinc-500">
+    <div class="">
         <p class="m-4">hello</p>
+        <RecipeCard/>
     </div>
 </template>
