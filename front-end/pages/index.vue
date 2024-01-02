@@ -1,8 +1,7 @@
 <template>
     <div class="">
         <Navbar/>
-        <p class="m-4">hello</p>
-
+        <br><br><br><br><br>
         <RecipeCard/>
     </div>
 </template>
