@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="fixed w-full h-52">
 
     </div>
 </template>
