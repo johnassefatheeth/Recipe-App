@@ -8,12 +8,12 @@
 
 
 const query = useQuery (gql`
-  query getShips($limit: Int!) {
-    ships(limit: $limit) {
-      id
-      name
-    }
+ query MyQuery {
+  food_recipe_Categories {
+    id
+    name
   }
+}
 `)
 
 </script>
