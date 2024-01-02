@@ -1,0 +1,110 @@
+
+Building a food recipe site with the specified technical requirements involves creating various pages, components, and views. Here's a breakdown of the necessary frontend pieces, including pages, components, and views:
+
+Pages:
+Home Page (Index Page):
+
+Displays a featured recipe slider.
+Lists recipe categories.
+Allows users to browse recipes by categories.
+Shows a list of recently added recipes.
+Recipe Listing Page:
+
+Displays a grid of recipes.
+Allows users to browse recipes by categories, creators, preparation times, and ingredients.
+Includes search functionality by title.
+Filters and sorting options available.
+Recipe Details Page:
+
+Shows detailed information about a recipe.
+Displays multiple images with a featured image for the thumbnail.
+Includes ingredients, preparation steps, and estimated preparation time.
+Shows user comments, likes, bookmarks, and ratings.
+Allows signed-in users to like, bookmark, comment, and rate the recipe.
+User Profile Page:
+
+Displays user information and avatar.
+Lists recipes created by the user.
+Allows other users to browse recipes by a specific user.
+Recipe Creation/Edit Page:
+
+Form for creating or editing a recipe.
+Allows users to upload multiple images and choose a featured image.
+Dynamic fields for ingredients and preparation steps.
+Selectable food category, title, description, and preparation time.
+Signup/Login Page:
+
+Forms for user registration and login.
+Uses JWT authentication.
+Components:
+Recipe Card Component:
+
+Used in the home page and recipe listing page.
+Displays a concise view of a recipe with an image, title, and brief information.
+Recipe Detail Component:
+
+Displays detailed information about a recipe.
+Includes images, ingredients, preparation steps, and other details.
+User Card Component:
+
+Used in the home page and user profile page.
+Displays user information and a link to view their recipes.
+Comment Section Component:
+
+Displays comments for a recipe.
+Allows users to add new comments.
+Rating Component:
+
+Allows users to rate a recipe.
+Bookmark/Like Component:
+
+Allows signed-in users to bookmark or like a recipe.
+Recipe Form Component:
+
+Used for both recipe creation and editing.
+Dynamic form for adding ingredients and preparation steps.
+Views:
+Public Views:
+
+Home page
+Recipe listing page
+Recipe details page
+User profile page
+Signup/login page
+Private Views (for Signed-In Users):
+
+Recipe creation/edit page
+User dashboard (with liked, bookmarked, and created recipes)
+Necessity Frontend Pieces:
+Vue 3 with Nuxt 3:
+
+Core framework for building the frontend.
+Vite:
+
+Fast build tool for Vue and JavaScript.
+Vue Apollo:
+
+Integration for handling GraphQL queries, mutations, and subscriptions.
+Vee-Validate:
+
+For form validations.
+Tailwind CSS:
+
+Utility-first CSS framework for styling.
+Additional Recommendations:
+Global State Management:
+
+Consider using Vuex for managing global state, especially for user authentication and app-wide data.
+Animations and Transitions:
+
+Add smooth animations and transitions for a better user experience.
+Responsive Design:
+
+Ensure the site is responsive for different devices.
+Error Handling:
+
+Implement error handling for API requests and user interactions.
+Testing:
+
+Write unit tests for critical components and functionality.
+By structuring your frontend following these guidelines, you can create an attractive and functional food recipe site that meets the specified technical requirements.
