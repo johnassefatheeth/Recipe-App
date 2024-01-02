@@ -1,17 +1,20 @@
 <template>
-    <div class="w-full h-screen justify-center  items-center bg-stone-700">
-    <div class="w-96 h-96 flex-col justify-center items-center bg-stone-500"> 
-    <h1>Signup</h1>
+    <div class="w-full flex h-screen justify-center  items-center bg-stone-700">
+    <div class="w-96 h-96 flex justify-center items-center bg-stone-500"> 
+    
+    <br>
     <form @submit.prevent="signup">
       <label>
         Username:
-        <input v-model="username" type="text" required />
+        <input class="m-8" v-model="username" type="text" required />
       </label>
+      <br>
       <label>
         Password:
-        <input v-model="password" type="password" required />
+        <input class="m-8" v-model="password" type="password" required />
       </label>
-      <button type="submit">Signup</button>
+      <br>
+      <button class="m-4" type="submit">Signup</button>
     </form>
   </div>
   </div>
