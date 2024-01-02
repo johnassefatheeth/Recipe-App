@@ -10,6 +10,11 @@
       </label>
       <br>
       <label>
+        email:
+        <input class="m-8" v-model="email" type="email" required />
+      </label>
+      <br>
+      <label>
         Password:
         <input class="m-8" v-model="password" type="password" required />
       </label>
@@ -25,6 +30,7 @@
 
 const username = ref('');
 const password = ref('');
+const email = ref('');
 
 </script>
 
