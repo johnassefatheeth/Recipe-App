@@ -19,6 +19,8 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@vue/apollo-composable": "^4.0.0-beta.12"
+    "@vee-validate/rules": "^4.5.8",
+    "@vue/apollo-composable": "^4.0.0-beta.12",
+    "vee-validate": "^4.12.4"
   }
 }
