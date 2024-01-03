@@ -5,6 +5,10 @@
     <br>
     <form class="w-full flex flex-col justify-center items-center" @submit.prevent="signup">
         <h1 class="m-8 text-3xl">signup</h1>
+
+        <input class="p-2 w-10/12 rounded-xl" placeholder="UserName" v-model="name" type="text" required />
+      
+      <br>
       
         <input class="p-2 w-10/12 rounded-xl" placeholder="UserName" v-model="username" type="text" required />
       
@@ -28,6 +32,7 @@
 const username = ref('');
 const password = ref('');
 const email = ref('');
+const name=ref('');
 
 </script>
 
