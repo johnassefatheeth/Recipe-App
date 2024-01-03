@@ -1,6 +1,7 @@
 // plugins/vee-validate.js
 
-import { createApp } from 'vue';
+import { defineNuxtPlugin } from '#app';
+
 import {
   defineRule,
   configure,
@@ -10,13 +11,6 @@ import {
   ErrorMessage,
 } from 'vee-validate';
 import { required, email, min, regex } from '@vee-validate/rules';
-
-// Install the vee-validate components globally
-const app = createApp();
-
-app.component('Field', Field);
-app.component('Form', Form);
-app.component('ErrorMessage', ErrorMessage);
 
 // Register the rules
 defineRule('required', required);
@@ -41,5 +35,5 @@ extend('customMin', {
   message: 'The {field} field should be at least {length} characters long.',
 });
 
-// Initialize vee-validate
-app.use({ install: () => {} });
+
+export default defineNuxtPlugin(() => {})

@@ -16,5 +16,6 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  plugins: ['~/plugins/vee-validate.js']
+  plugins: ['~/plugins/vee-validate.js'],
+  ssr: false
 })
