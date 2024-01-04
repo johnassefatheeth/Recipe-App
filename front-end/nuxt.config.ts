@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: ['@nuxtjs/apollo'],
+  ssr:false,
   apollo: {
     clients: {
       default: {
@@ -16,6 +17,5 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  plugins: ['~/plugins/vee-validate.js'],
-  ssr: false
+  plugins: ['~/plugins/vee-validate.js']
 })

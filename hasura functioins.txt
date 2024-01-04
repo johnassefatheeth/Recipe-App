@@ -1,0 +1,114 @@
+Functions:
+Create Recipe Function:
+
+Parameters: User ID, Recipe Title, Description, Preparation Time, Category, Featured Image, Ingredients, Steps.
+Actions: Insert data into respective tables (recipes, ingredients, steps).
+Return: Recipe ID.
+Edit Recipe Function:
+
+Parameters: Recipe ID, User ID, Updated Title, Description, Preparation Time, Category, Featured Image, Ingredients, Steps.
+Actions: Update data in respective tables.
+Return: Success/Failure status.
+Delete Recipe Function:
+
+Parameters: Recipe ID, User ID.
+Actions: Delete data from respective tables.
+Return: Success/Failure status.
+Like Recipe Function:
+
+Parameters: Recipe ID, User ID.
+Actions: Insert like data into a separate likes table.
+Return: Success/Failure status.
+Bookmark Recipe Function:
+
+Parameters: Recipe ID, User ID.
+Actions: Insert bookmark data into a separate bookmarks table.
+Return: Success/Failure status.
+Comment on Recipe Function:
+
+Parameters: Recipe ID, User ID, Comment Text.
+Actions: Insert comment data into a separate comments table.
+Return: Success/Failure status.
+Triggers:
+Update Recipe Count Trigger:
+
+Actions: Whenever a new recipe is added, update the recipe count for the specific category.
+Update User Recipe Count Trigger:
+
+Actions: Whenever a user adds, edits, or deletes a recipe, update their recipe count.
+Update Recipe Like Count Trigger:
+
+Actions: Whenever a like is added or removed, update the like count for the specific recipe.
+Update Recipe Bookmark Count Trigger:
+
+Actions: Whenever a recipe is bookmarked or the bookmark is removed, update the bookmark count for the specific recipe.
+Procedures:
+Search Recipe Procedure:
+
+Parameters: Search term.
+Actions: Search in recipe titles and descriptions.
+Return: List of matching recipes.
+Filter by Category Procedure:
+
+Parameters: Category ID.
+Actions: Retrieve recipes belonging to the specified category.
+Return: List of recipes.
+Filter by Ingredients Procedure:
+
+Parameters: List of ingredient IDs.
+Actions: Retrieve recipes containing specified ingredients.
+Return: List of recipes.
+Get User Recipes Procedure:
+
+Parameters: User ID.
+Actions: Retrieve recipes created by the specified user.
+Return: List of recipes.
+Hasura Computed Properties:
+Total Likes Count for Recipe:
+
+Computed from the likes table for a specific recipe.
+Total Bookmarks Count for Recipe:
+
+Computed from the bookmarks table for a specific recipe.
+Hasura Events:
+User Signup Event:
+
+Actions: Create a new user in the database.
+User Delete Event:
+
+Actions: Delete all user-related data when a user is deleted.
+Recipe Create Event:
+
+Actions: Trigger the necessary functions and updates when a new recipe is created.
+Recipe Delete Event:
+
+Actions: Trigger the necessary updates when a recipe is deleted.
+Hasura Computed Properties:
+Recipe Average Rating:
+
+Computed from the ratings table for a specific recipe.
+Recipe Comment Count:
+
+Computed from the comments table for a specific recipe.
+UI/UX Considerations:
+Responsive Design:
+
+Ensure the site looks good on various devices.
+User-Friendly Navigation:
+
+Intuitive navigation for browsing recipes by category, creator, and other filters.
+Attractive Recipe Cards:
+
+Design visually appealing recipe cards with featured images.
+Interactive Features:
+
+Implement features like liking, bookmarking, and commenting with smooth transitions.
+Search Bar:
+
+Include a prominent search bar for easy recipe discovery.
+Clear Call-to-Actions:
+
+Ensure that users can easily understand how to create, edit, and interact with recipes.
+Progress Indicators:
+
+Provide feedback on actions like recipe creation/editing.

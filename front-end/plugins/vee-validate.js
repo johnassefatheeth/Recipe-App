@@ -35,5 +35,13 @@ extend('customMin', {
   message: 'The {field} field should be at least {length} characters long.',
 });
 
-
-export default defineNuxtPlugin(() => {})
+// Export the plugin as a Nuxt plugin
+export default defineNuxtPlugin(() => {
+  // Install the vee-validate components globally
+  // You can keep these if you want to use them globally in your components
+  // However, they are not required for the plugin to work
+  // The following lines are optional
+  app.component('Field', Field);
+  app.component('Form', Form);
+  app.component('ErrorMessage', ErrorMessage);
+});
