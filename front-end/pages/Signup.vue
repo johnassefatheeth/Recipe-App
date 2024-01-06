@@ -80,7 +80,9 @@
   <script setup>
   import { object, string, ref as yupRef } from "yup";
   import { configure } from "vee-validate";
-  
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+import { gql } from '@apollo/client';
+import { useQuery } from "@vue/apollo-composable";
   const debug = ref(false);
   
   onMounted(() => {
@@ -88,9 +90,27 @@
   });
   
   const existingEmail = async (value) => {
-    const result = await $fetch("/api/checkemail?email=" + value);
-    return result ? true : false;
-  };
+      try {
+        
+        const { data } = await this.$apollo.mutate({
+          mutation: gql`
+            mutation($email: String!) {
+              check_user_by_email(email: $email)
+            }
+          `,
+          variables: {
+            email: value,
+          },
+        });
+
+        // Handle the response data
+        const result = data.check_user_by_email;
+        console.log(result); // Boolean value returned by the function
+      } catch (error) {
+        // Handle errors
+        console.error('Error invoking database function:', error);
+      }
+    }
   
   const handleSubmit = (values, actions) => {
     console.log(values);
