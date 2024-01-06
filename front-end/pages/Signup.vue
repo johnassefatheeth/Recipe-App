@@ -11,14 +11,26 @@
           v-slot="{ meta: formMeta, errors: formErrors }"
           @submit="handleSubmit"
         >
-          <button
-            class="toggle-debug bg-link text-white py-2 px-4 rounded-full float-right"
-            @click="debug = !debug"
-          >
-            {{ debug ? "Remove Debug" : "Show Debug" }}
-          </button>
+          
   
           <h2 class="text-2xl mt-2">Sign Up</h2>
+          <VTextInput
+            type="text"
+            name="name"
+            label="name"
+            placeholder="full name"
+            :debug="debug"
+            leftIcon="fa-envelope"
+          />
+
+          <VTextInput
+            type="text"
+            name="userName"
+            label="userName"
+            placeholder="userName"
+            :debug="debug"
+            leftIcon="fa-envelope"
+          />
   
           <VTextInput
             type="email"
@@ -80,37 +92,17 @@
   <script setup>
   import { object, string, ref as yupRef } from "yup";
   import { configure } from "vee-validate";
-import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
-import { gql } from '@apollo/client';
-import { useQuery } from "@vue/apollo-composable";
+  import checkUserByEmailHandler from '~/plugins/hasuraActions.js';
   const debug = ref(false);
   
   onMounted(() => {
     debug.value = useRouter().currentRoute.value.query.debug === "true";
   });
   
-  const existingEmail = async (value) => {
-      try {
-        
-        const { data } = await this.$apollo.mutate({
-          mutation: gql`
-            mutation($email: String!) {
-              check_user_by_email(email: $email)
-            }
-          `,
-          variables: {
-            email: value,
-          },
-        });
-
-        // Handle the response data
-        const result = data.check_user_by_email;
-        console.log(result); // Boolean value returned by the function
-      } catch (error) {
-        // Handle errors
-        console.error('Error invoking database function:', error);
-      }
-    }
+//   const existingEmail = async (value) => {
+//     const result = await checkUserByEmailHandler({ email: 'example@example.com' });
+//     console.log(result);
+//     }
   
   const handleSubmit = (values, actions) => {
     console.log(values);
@@ -127,18 +119,22 @@ import { useQuery } from "@vue/apollo-composable";
   const schema = object({
     email: string()
       .required()
-      .email()
-      .test(
-        "email-is-taken",
-        "Email is already taken",
-        async (value) => !(await existingEmail(value))
-      )
-      .label("Email Address"),
+      .email(),
+    //   .test(
+    //     "email-is-taken",
+    //     "Email is already taken",
+    //     async (value) => !(await existingEmail(value))
+    //   )
+    //   .label("Email Address"),
     password: string().required().min(8).label("Your Password"),
     confirmed: string()
       .required()
       .oneOf([yupRef("password")], "Passwords do not match")
       .label("Your Confirmation Password"),
+    name: string()
+      .required()
+      .min(2),
+    userName: string().required()
   });
   
   const initialValues = { email: "", password: "", confirmed: "" };
