@@ -9,6 +9,9 @@ export default defineNuxtConfig({
       }
     },
   },
+  plugins: [
+    { src: '~/plugins/hasuraActions.js', mode: 'server' },
+  ],
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   postcss: {
