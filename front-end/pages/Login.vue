@@ -13,14 +13,7 @@
           
   
           <h2 class="text-2xl mt-2">Sign Up</h2>
-          <VTextInput
-            type="text"
-            name="name"
-            label="name"
-            placeholder="full name"
-            leftIcon="fa-envelope"
-          />
-
+          
           <VTextInput
             type="text"
             name="userName"
@@ -29,25 +22,12 @@
             leftIcon="fa-envelope"
           />
   
-          <VTextInput
-            type="email"
-            name="email"
-            label="Email"
-            placeholder="Email"
-            leftIcon="fa-envelope"
-          />
+          
           <VTextInput
             type="password"
             name="password"
             label="Password"
             placeholder="Password"
-            leftIcon="fa-lock"
-          />
-          <VTextInput
-            type="password"
-            name="confirmed"
-            label="Confirm Password"
-            placeholder="Confirm Password"
             leftIcon="fa-lock"
           />
   
@@ -97,23 +77,8 @@ const handleSubmit= ()=>{
 const initialValues = { email: "", password: "", confirmed: "" ,name:"",userName:""};
 
 const schema = object({
-    email: string()
-      .required()
-      .email(),
-    //   .test(
-    //     "email-is-taken",
-    //     "Email is already taken",
-    //     async (value) => !(await existingEmail(value))
-    //   )
-    //   .label("Email Address"),
+    
     password: string().required().min(8).label("Your Password"),
-    confirmed: string()
-      .required()
-      .oneOf([yupRef("password")], "Passwords do not match")
-      .label("Your Confirmation Password"),
-    name: string()
-      .required()
-      .min(2),
     userName: string().required()
   });
 
