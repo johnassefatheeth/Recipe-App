@@ -1,13 +1,24 @@
 <template>
     <div>
+        <Navbar/>
         
-        <p>work</p><br><br><br><br><br>
-        <div v-for="recipe in query.data.value.food_recipe_Recipes" :key="recipe.id">
-        <h2>{{ recipe.User.name }}</h2>
-        <h3>{{ recipe.Category.name }}</h3>
-        <img :src="recipe.Image.url" alt="Recipe Image" />
-        <p>Average Rating: {{ recipe.Ratings_aggregate.aggregate.avg.rating }}</p>
-      </div>    </div>
+        <br><br><br><br><br>
+        <div class="flex flex-wrap">
+        <div class="flex" v-for="recipe in query.data.value.food_recipe_Recipes" :key="recipe.id">
+
+            <RecipeCard
+            :title= recipe.title 
+            :imgUrl=recipe.Image.url
+            :catagory= recipe.Category.name
+            :author=recipe.User.name
+            :rating= recipe.Ratings_aggregate.aggregate.avg.rating
+            />
+
+            
+        
+      </div> 
+    </div>   
+      </div>
 </template>
 <script setup>
 
@@ -31,11 +42,10 @@ const query = await useAsyncQuery (gql`
     User {
       name
     }
+    title
   }
 }
 
 `)
-
-console.log(query.data)
 
 </script>
