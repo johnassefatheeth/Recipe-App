@@ -19,7 +19,6 @@
             name="name"
             label="name"
             placeholder="full name"
-            :debug="debug"
             leftIcon="fa-envelope"
           />
 
@@ -28,7 +27,6 @@
             name="userName"
             label="userName"
             placeholder="userName"
-            :debug="debug"
             leftIcon="fa-envelope"
           />
   
@@ -37,7 +35,6 @@
             name="email"
             label="Email"
             placeholder="Email"
-            :debug="debug"
             leftIcon="fa-envelope"
           />
           <VTextInput
@@ -45,7 +42,6 @@
             name="password"
             label="Password"
             placeholder="Password"
-            :debug="debug"
             leftIcon="fa-lock"
           />
           <VTextInput
@@ -53,7 +49,6 @@
             name="confirmed"
             label="Confirm Password"
             placeholder="Confirm Password"
-            :debug="debug"
             leftIcon="fa-lock"
           />
   
@@ -81,9 +76,7 @@
             Submit
           </button>
   
-          <div class="debug mt-3" v-if="debug">
-            <pre>{{ formMeta }}</pre>
-          </div>
+          
         </VForm>
       </div>
     </div>
@@ -93,11 +86,7 @@
   import { object, string, ref as yupRef } from "yup";
   import { configure } from "vee-validate";
   import checkUserByEmailHandler from '~/plugins/hasuraActions.js';
-  const debug = ref(false);
   
-  onMounted(() => {
-    debug.value = useRouter().currentRoute.value.query.debug === "true";
-  });
   
 //   const existingEmail = async (value) => {
 //     const result = await checkUserByEmailHandler({ email: 'example@example.com' });
@@ -137,7 +126,7 @@
     userName: string().required()
   });
   
-  const initialValues = { email: "", password: "", confirmed: "" };
+  const initialValues = { email: "", password: "", confirmed: "" ,name:"",userName:""};
   </script>
   
   <style scoped>
