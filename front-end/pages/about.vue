@@ -16,6 +16,4 @@ const query = await useAsyncQuery (gql`
 }
 `)
 
-console.log(query)
-
 </script>
