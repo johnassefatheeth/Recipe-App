@@ -5,3 +5,9 @@
         <RecipeCard/>
     </div>
 </template>
+<script setup>
+
+
+
+
+</script>
