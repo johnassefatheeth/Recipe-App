@@ -26,7 +26,7 @@
                 <li class="m-4">search recipe</li>
             </ul>
         </div>
-            <div class="float-right">
+            <div class="inline-block">
                 <ul v-if="hoverByTime">
                         <li class="m-2"> - 15 min </li>
                         <li class="m-2"> 15-30 min</li> 
