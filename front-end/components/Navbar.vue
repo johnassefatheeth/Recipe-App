@@ -15,7 +15,15 @@
 
         <div v-if="hoverOnBrowse" @mouseover="hoverOnBrowse = true" class="w-full h-fit bg-slate-400 p-6" >
             <ul>
-                <li>by time</li>
+                <li>by time
+                    <ul v-if="hoverOnBrowse">
+                        <li> - 15 min </li>
+                        <li> 15-30 min</li> 
+                        <li> 30-45 min</li>   
+                        <li> 45-60 min</li>  
+                        <li> 60 min - </li>              
+                    </ul>
+                </li>
                 <li>by catagory</li>
                 <li>creator</li>
                 <li>ingredients</li>
