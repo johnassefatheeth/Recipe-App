@@ -14,21 +14,26 @@
 
 
         <div v-if="hoverOnBrowse" @mouseover="hoverOnBrowse = true" class="w-full h-fit bg-slate-400 p-6" >
+            <div class=" inline-block">
+            
             <ul>
-                <li>by time
-                    <ul v-if="hoverOnBrowse">
-                        <li> - 15 min </li>
-                        <li> 15-30 min</li> 
-                        <li> 30-45 min</li>   
-                        <li> 45-60 min</li>  
-                        <li> 60 min - </li>              
-                    </ul>
+                <li class="m-4 w-full" @mouseover="hoverByTime=true" @mouseleave="hoverByTime = false" >by time
+                    
                 </li>
-                <li>by catagory</li>
-                <li>creator</li>
-                <li>ingredients</li>
-                <li>search recipe</li>
+                <li class="m-4">by catagory</li>
+                <li class="m-4">creator</li>
+                <li class="m-4">ingredients</li>
+                <li class="m-4">search recipe</li>
             </ul>
+        </div>
+            <div class="float-right">
+                <ul v-if="hoverByTime">
+                        <li class="m-2"> - 15 min </li>
+                        <li class="m-2"> 15-30 min</li> 
+                        <li class="m-2"> 30-45 min</li>   
+                        <li class="m-2"> 45-60 min</li>  
+                        <li class="m-2"> 60 min - </li>              
+                    </ul></div>
         
         </div>
 
@@ -38,6 +43,7 @@
 <script setup >
 const signedin = ref(true)
 const hoverOnBrowse = ref(false)
+const hoverByTime= ref(false)
 
 </script>
 
