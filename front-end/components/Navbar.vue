@@ -3,7 +3,7 @@
         <ul class="flex justify-evenly items-center h-full">
             <li @mouseover="hoverOnBrowse = false"> <NuxtLink to="/">Home</NuxtLink></li>
             <li @mouseover="hoverOnBrowse = false"> <NuxtLink to="/about">about</NuxtLink></li>
-            <li @mouseover="hoverOnBrowse = false"> <NuxtLink to="/recipelisting">recipe</NuxtLink></li>
+            <li @mouseover="hoverOnBrowse = false"> <NuxtLink to="/RecipeListing">recipe</NuxtLink></li>
             <li  @mouseover="hoverOnBrowse = true"  > browse</li>
             <li @mouseover="hoverOnBrowse = false" v-if="!signedin"> <NuxtLink to="/login">login</NuxtLink></li>
             <li @mouseover="hoverOnBrowse = false" v-if="!signedin"> <NuxtLink to="/signup">signup</NuxtLink></li>
