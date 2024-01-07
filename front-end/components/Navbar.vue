@@ -4,6 +4,7 @@
             <li> <NuxtLink to="/">Home</NuxtLink></li>
             <li> <NuxtLink to="/about">about</NuxtLink></li>
             <li> <NuxtLink to="/recipelisting">recipe</NuxtLink></li>
+            <li >browse </li>
             <li v-if="!signedin"> <NuxtLink to="/login">login</NuxtLink></li>
             <li v-if="!signedin"> <NuxtLink to="/signup">signup</NuxtLink></li>
             <li v-if="signedin"> <NuxtLink to="/userprofile">yourprofile</NuxtLink></li>
@@ -11,11 +12,24 @@
             <li v-if="signedin"> <NuxtLink to="/Login" >logout</NuxtLink> </li>
         </ul>
 
+
+        <div v-if="hoverOnBrowse">
+            <ul>
+                <li>by time</li>
+                <li>by catagory</li>
+                <li>creator</li>
+                <li>ingredients</li>
+                <li>search recipe</li>
+            </ul>
+        
+        </div>
+
     </div>
 </template>
 
 <script setup >
 const signedin = ref(true)
+const hoverOnBrowse = ref(false)
 
 </script>
 
