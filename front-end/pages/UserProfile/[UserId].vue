@@ -23,6 +23,7 @@
 </template>
 
 <script setup>
+const userId=useRoute().params.UserId
 
 </script>
 

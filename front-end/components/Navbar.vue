@@ -7,7 +7,7 @@
             <li  @mouseover="hoverOnBrowse = true"  > browse</li>
             <li @mouseover="hoverOnBrowse = false" v-if="!signedin"> <NuxtLink to="/login">login</NuxtLink></li>
             <li @mouseover="hoverOnBrowse = false" v-if="!signedin"> <NuxtLink to="/signup">signup</NuxtLink></li>
-            <li @mouseover="hoverOnBrowse = false" v-if="signedin"> <NuxtLink to="/userprofile">yourprofile</NuxtLink></li>
+            <li @mouseover="hoverOnBrowse = false" v-if="signedin"> <NuxtLink to="/userprofile/1">yourprofile</NuxtLink></li>
             <li @mouseover="hoverOnBrowse = false" v-if="signedin"> <NuxtLink to="/AddRecipe">Add Recipe</NuxtLink> </li>
             <li @mouseover="hoverOnBrowse = false" v-if="signedin"> <NuxtLink to="/Login" >logout</NuxtLink> </li>
         </ul>
