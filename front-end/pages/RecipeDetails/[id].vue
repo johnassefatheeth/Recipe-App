@@ -33,7 +33,7 @@
           <img class="w-full mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.featured_img" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Featured Image">
   
           <h2 class="text-lg font-bold mb-2">User:</h2>
-          <p>{{ query.data.value.food_recipe_Recipes_by_pk.User.name }}</p>
+          <NuxtLink :to="`/UserProfile/${query.data.value.food_recipe_Recipes_by_pk.User.id}`">{{ query.data.value.food_recipe_Recipes_by_pk.User.name }}</NuxtLink>
   
           <!-- Section to display comments -->
           <h2 class="text-lg font-bold mb-2">Comments:</h2>
@@ -124,6 +124,7 @@ const query = await useAsyncQuery (gql`
     title
     updated_at
     User {
+        id
       name
     }
   }

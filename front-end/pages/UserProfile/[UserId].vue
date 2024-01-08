@@ -1,29 +1,63 @@
 <template>
-<div class="p-12 flex-col">
-    <div class="p-10 bg-zinc-600 w-full flex m-4 mt-0 rounded-lg">
-        <img class="m-4 rounded-full align-right w-52 h-52" src="../assets/image/avatar.png" alt="userimage">
-            <div><h1 class="text-5xl m-4 ">name</h1>
-            <h1 class="text-2xl m-4 ">@userName</h1>
-            <h1 class="m-4">avgrating</h1>
-            </div>
-    </div>
-    <div class="flex bg-zinc-700 m-4 h-96 rounded-lg">
-        <div class="w-1/3 bg-gray-400 m-4 p-4 rounded-lg">
-            <h1>userName</h1>
-            <h1>email</h1>
-            <h1>created at</h1>
-        </div>
-        <div class="w-2/3 bg-gray-400 m-4 p-4 rounded-lg flex">
-            <h1 class="mr-12">recipes</h1>
-            <h1>comments</h1>
-        </div>
-       </div>
-    
+ <div class="container mx-auto px-4 py-8">
+     <div class="bg-white rounded-lg shadow-lg p-4"> 
+        <h1 class="text-2xl font-bold mb-4">{{ query.data.value.food_recipe_Users_by_pk.name }}</h1> 
+        <p class="mb-2">Username: {{ query.data.value.food_recipe_Users_by_pk.UserName }}</p> 
+        <p class="mb-2">Email: {{ query.data.value.food_recipe_Users_by_pk.email }}</p>
+        <p class="mb-2">Created At: {{ query.data.value.food_recipe_Users_by_pk.created_at }}</p> 
+        <p class="mb-2">Average Rating: {{ query.data.value.food_recipe_Users_by_pk.Ratings_aggregate.aggregate.avg.rating }}</p> 
+        <p class="mb-2">Total Likes: {{ query.data.value.food_recipe_Users_by_pk.Likes_aggregate.aggregate.sum.recipe_id }}</p> 
+        <div class="mt-4"> 
+            <h2 class="text-lg font-bold mb-2">Recipes:</h2> 
+            <ul> 
+                <li v-for="recipe in query.data.value.food_recipe_Users_by_pk.Recipes" :key="recipe.id"> 
+                    <NuxtLink :to="`/RecipeDetails/${recipe.id}`"> <p>{{ recipe.title }}</p> <p>Category: {{ recipe.Category.name }}</p> </NuxtLink>
+                </li> 
+            </ul> 
+        </div> 
+    </div> 
+</div> 
+
+<div>
 </div>
 </template>
 
 <script setup>
 const userId=useRoute().params.UserId
+
+
+const query=await useAsyncQuery(gql`
+query MyQuery ($id: Int!) {
+  food_recipe_Users_by_pk(id: $id) {
+    UserName
+    created_at
+    email
+    name
+    Likes_aggregate {
+      aggregate {
+        sum {
+          recipe_id
+        }
+      }
+    }
+    Ratings_aggregate {
+      aggregate {
+        avg {
+          rating
+        }
+      }
+    }
+    Recipes {
+      Category {
+        name
+      }
+      title
+      id
+    }
+  }
+}
+
+`,{id:userId})
 
 </script>
 
