@@ -1,84 +1,183 @@
 <template>
     <div>
-        {{ props.myObject}}
-        {{ query}}
-
-        <!-- <div class="flex" v-for="recipe in query.data.food_recipe_Recipes" :key="recipe.id">
-          <div @click="goToRecipe(recipe.id)">
-
-          
-            <RecipeCard
-            :title= recipe.title 
-            :imgUrl=recipe.Image.url
-            :catagory= recipe.Category.name
-            :author=recipe.User.name
-            :rating= recipe.Ratings_aggregate.aggregate.avg.rating
-            />
-
-          </div>
-
-            
-        
-      </div>  -->
-
+      <p>Search Method: {{ props.myObject.SearchMethod }}</p>
+      <p >Query Result: {{  queryResult.value }}</p>
+      
     </div>
-</template>
-
-<script setup>
+  </template>
+  
+  <script setup>
 
 const props = defineProps({
-  myObject: {
-    type: Object,
-    required: true
-  }})
-
- const query=ref()
-
-
-
-  switch (props.myObject.SearchMethod) {
-  case 1:
-    query = await useAsyncQuery(gql`query MyQuery ($Cat: String!) {
-      food_recipe_Recipes(where: {Category: {name: {_eq: $Cat}}}) {
-        id
-      }
-    }`, {Cat: props.myObject.Category})
-    console.log(query)
-    break;
-  case 2:
-    query = await useAsyncQuery(gql`query MyQuery ($prp: Int!) {
-      food_recipe_Recipes(where: {preparation_time: {_lt: $prp}}) {
-        id
-      }
-    }`, {prp: props.myObject.PrepTime})
-    break;
-  case 3:
-    // query= await useAsyncQuery(gql`query MyQuery {
-    //   food_recipe_Recipes(where: {preparation_time: {_lt: 80}}) {
-    //     id
-    //   }
-    // }`)
-    break;
-  case 4:
-    query = await useAsyncQuery(gql`query MyQuery ($User: String!) {
-      food_recipe_Recipes(where: {User: {UserName: {_ilike: $User}}}) {
-        id
-      }
-    }`, {User: props.myObject.Creator})
-    break;
-  case 5:
-    query = await useAsyncQuery(gql`query MyQuery ($Title: String!) {
-      food_recipe_Recipes(where: {title: {_ilike: $Title}}) {
-        id
-      }
-    }`, {Title: props.myObject.Title})
-    break;
-  default:
+    myObject: {
+      type: Object,
+      required: true
+    }})
     
-    break;
-}
-</script>
+    let queryResult = ref({});
+   
+  const executeQuery = async (searchMethod) => {
+    
+  
+    switch (searchMethod) {
+      case 1:
+        queryResult = await useAsyncQuery(gql`query MyQuery ($Cat: String!) {
+          food_recipe_Recipes(where: {Category: {name: {_eq: $Cat}}}) {
+            title
+            preparation_time
+            User {
+            name
+            Likes_aggregate {
+                aggregate {
+                sum {
+                    User_id
+                }
+                }
+            }
+            }
+            
+            Image {
+            url
+            }
+            Likes_aggregate {
+            aggregate {
+                sum {
+                User_id
+                }
+            }
+            }
+            Ratings_aggregate {
+            aggregate {
+                avg {
+                rating
+                }
+            }
+            }
+          }
+        }`, { Cat: props.myObject.Category });
+        break;
+      case 2:
+        queryResult = await useAsyncQuery(gql`query MyQuery ($prp: Int!) {
+          food_recipe_Recipes(where: {preparation_time: {_lte: $prp}}) {
+            title
+            preparation_time
+            User {
+            name
+            Likes_aggregate {
+                aggregate {
+                sum {
+                    User_id
+                }
+                }
+            }
+            }
+            
+            Image {
+            url
+            }
+            Likes_aggregate {
+            aggregate {
+                sum {
+                User_id
+                }
+            }
+            }
+            Ratings_aggregate {
+            aggregate {
+                avg {
+                rating
+                }
+            }
+            }
+          }
+        }`, { prp: props.myObject.PreparationTime });
+        break;
+      case 3:
+        // Query for search method 3
+        break;
+      case 4:
+        queryResult = await useAsyncQuery(gql`query MyQuery ($User: String!) {
+          food_recipe_Recipes(where: {User: {UserName: {_ilike: $User}}}) {
+            title
+            preparation_time
+            User {
+            name
+            Likes_aggregate {
+                aggregate {
+                sum {
+                    User_id
+                }
+                }
+            }
+            }
+            
+            Image {
+            url
+            }
+            Likes_aggregate {
+            aggregate {
+                sum {
+                User_id
+                }
+            }
+            }
+            Ratings_aggregate {
+            aggregate {
+                avg {
+                rating
+                }
+            }
+            }
+          }
+        }`, { User: props.myObject.Creator });
+        break;
+      case 5:
+        queryResult = await useAsyncQuery(gql`query MyQuery ($Title: String!) {
+          food_recipe_Recipes(where: {title: {_ilike: $Title}}) {
+            title
+            preparation_time
+            User {
+            name
+            Likes_aggregate {
+                aggregate {
+                sum {
+                    User_id
+                }
+                }
+            }
+            }
+            
+            Image {
+            url
+            }
+            Likes_aggregate {
+            aggregate {
+                sum {
+                User_id
+                }
+            }
+            }
+            Ratings_aggregate {
+            aggregate {
+                avg {
+                rating
+                }
+            }
+            }
+          }
+        }`, { Title: props.myObject.Title });
+        break;
+      default:
+        break;
+    }
+  
+    console.log(queryResult);
+  };
+  
+  watch(() => props.myObject.SearchMethod, (newSearchMethod, oldSearchMethod) => {
+    executeQuery(newSearchMethod);
+  });
+  </script>
 
-<style scoped>
 
-</style>
+
