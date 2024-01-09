@@ -57,7 +57,6 @@
 
 <script setup>
 const id=useRoute().params.id
-console.log(id); // $routes.param.id
 
 
 const query = await useAsyncQuery (gql`

@@ -4,10 +4,9 @@
         <li class="w-full bg-slate-300 border-2">
           <div>Category</div>
           <select v-model="recipeFilter.Category" defaultValue="Any" class="w-full">
-            <option value="Any">Any</option>
             <option v-for="category in query.data.value.food_recipe_Categories" :value="category.name">{{ category.name }}</option>
           </select>
-          <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4">Filter</button>
+          <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4" @click="recipeFilter.SearchMethod = 1">Filter</button>
         </li>
         <li class="w-full bg-slate-300 border-2">
           <div>Preparation Time</div>
@@ -18,7 +17,7 @@
             <option value="60">60 max</option>
             <option value="3600">I don't care</option>
           </select>
-          <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4">Filter</button>
+          <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4" @click="recipeFilter.SearchMethod = 2">Filter</button>
         </li>
         <li class="w-full bg-slate-300 border-2">
           <div>Ingredient</div>
@@ -30,19 +29,20 @@
           >
             {{ ingredient.name }}
           </button>
-          <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4">Filter</button>
+          <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4" @click="recipeFilter.SearchMethod = 3">Filter</button>
         </li>
         <li class="w-full bg-slate-300 border-2">
           <div>Creator</div>
           <input type="text" v-model="recipeFilter.Creator" class="w-full" />
-          <button class="bg-blue-500 text-white px-3 py-1 rounded">Search</button>
+          <button class="bg-blue-500 text-white px-3 py-1 rounded" @click="recipeFilter.SearchMethod = 4">Search</button>
         </li>
         <li class="w-full bg-slate-300 border-2">
           <div>Recipe Title</div>
           <input type="text" v-model="recipeFilter.Title" class="w-full" />
-          <button class="bg-blue-500 text-white px-3 py-1 rounded">Search</button>
+          <button class="bg-blue-500 text-white px-3 py-1 rounded" @click="recipeFilter.SearchMethod = 5">Search</button>
         </li>
       </ul>
+
   
       
   
