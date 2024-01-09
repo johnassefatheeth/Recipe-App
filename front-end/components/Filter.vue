@@ -60,10 +60,6 @@ const recipeFilter = ref({
   SearchMethod: 0,
 });
 
-// const filterRecipe = (filtered) => {
-//     console.log(filtered)
-//     navigateTo(`/RecipeListing/${filtered}`)
-// }
 
 
 
