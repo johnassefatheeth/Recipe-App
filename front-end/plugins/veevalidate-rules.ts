@@ -7,7 +7,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     .forEach((rule) => {
       try {
         defineRule(rule, rules[rule]);
-        console.log( rule);
       } catch (error) {
         console.error(`Error defining rule ${rule}:`, error);
       }

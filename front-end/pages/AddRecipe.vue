@@ -25,7 +25,7 @@
   
       <div class="my-4">
         <label class="text-lg font-bold">Image</label>
-        <input type="file" name="image" class="w-full">
+        <input type="file" name="image" class="w-full" @change="onFileChange">
       </div>
   
       <div class="my-4">
@@ -50,13 +50,20 @@
   
   <script setup>
 
+  const emits = defineEmits(["filechange"]);
 
-try {
-  require('firebase');
-  console.log('Package is installed');
-} catch (error) {
-  console.log('Package is not installed');
-}
+    const onFileChange = async (e) => {
+      var file = e.target.files || e.dataTransfer.files;
+      if (!file.length) return;
+
+
+      const {snapshot ,DownloadURL, metadata} = await uploadFile(file[0]);
+
+        console.log(snapshot, DownloadURL, metadata);
+
+      emits("filechange", snapshot, DownloadURL, metadata);
+    };
+
 
   const recipeTemplate = ref({
     Category: '',
