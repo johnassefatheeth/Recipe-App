@@ -21,9 +21,10 @@
       <div class="my-4">
         <label for="description" class="text-lg font-bold">Description</label>
         <input v-model="recipeTemplate.Description" type="text" id="description" name="description" class="w-full p-2 border border-gray-300 rounded">
-      </div>
+    </div>
   
       <div class="my-4">
+        <img v-if="recipeTemplate.imgUrl!=''" :src=recipeTemplate.imgUrl alt="your image" class="w-44 h-44">
         <label class="text-lg font-bold">Image</label>
         <input type="file" name="image" class="w-full" @change="onFileChange">
       </div>
@@ -36,12 +37,17 @@
       </div>
   
       <div class="my-4">
-        <label for="steps" class="text-lg font-bold">Steps</label>
-        <textarea v-model="recipeTemplate.Steps" id="steps" name="steps" rows="4" class="w-full p-2 border border-gray-300 rounded"></textarea>
-      </div>
+    <label for="steps" class="text-lg font-bold">Steps</label>
+    <div v-for="(step, index) in recipeTemplate.Steps" :key="index" class="flex">
+      <input v-model="step.stepOrder" type="number" class="w-12 p-2 mr-2 border border-gray-300 rounded" placeholder="Order">
+      <textarea v-model="step.stepDescription" :id="'step-' + index" :name="'step-' + index" rows="4" class="flex-1 p-2 border border-gray-300 rounded" placeholder="Description"></textarea>
+      <button @click="removeStep(index)" class="ml-2 text-red-500">Remove</button>
+    </div>
+    <button @click="addStep" class="mt-2">Add Step</button>
+  </div>
   
       <div class="my-4">
-      <button class="bg-green-500 text-white font-semibold py-2 px-4 rounded">
+      <button @click="addImage" class="bg-green-500 text-white font-semibold py-2 px-4 rounded">
         Save
       </button>
     </div>
@@ -49,6 +55,73 @@
   </template>
   
   <script setup>
+import $apollo from '@/plugins/apollo'
+import { gql, useMutation } from '@vue/apollo-composable'
+import { ref } from 'vue'
+
+
+const { mutate: insertImage, loading: imgloading, error: imgerror } = useMutation(gql`
+  mutation MyMutation($url: String!) {
+    insert_food_recipe_Images(objects: { url: $url }) {
+      returning {
+        id
+      }
+    }
+  }
+`);
+
+const addImage = async () => {
+
+    const{data}=await $apollo.mutate({
+      mutation: gql`
+        mutation MyMutation($url: String!) {
+          insert_food_recipe_Images(objects: { url: $url }) {
+            returning {
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        url: recipeTemplate.value.imgUrl
+      }
+    });
+
+    console.log(data)
+
+
+//   await insertImage({
+//     url: recipeTemplate.value.imgUrl
+//   });
+//   router.push({path: '/'})
+};
+
+ const recipeTemplate = ref({
+    Category: '',
+    PrepTime: 0,
+    Ingredient: [],
+    Description: '',
+    Creator: 'johnA',
+    Title: '',
+    Steps: [{
+        stepOrder: 0,
+        stepDescription: '',
+  }],
+    imgUrl: '',
+  });
+
+
+  const addStep = () => {
+  const newStep = {
+    stepOrder: recipeTemplate.value.Steps.length + 1,
+    stepDescription: '',
+  };
+  recipeTemplate.value.Steps.push(newStep);
+};
+
+const removeStep = (index) => {
+  recipeTemplate.value.Steps.splice(index, 1);
+};
 
   const emits = defineEmits(["filechange"]);
 
@@ -59,24 +132,16 @@
 
       const {snapshot ,DownloadURL, metadata} = await uploadFile(file[0]);
 
-        console.log(snapshot, DownloadURL, metadata);
+
+        recipeTemplate.value.imgUrl = DownloadURL
+
+
 
       emits("filechange", snapshot, DownloadURL, metadata);
     };
 
 
-  const recipeTemplate = ref({
-    Category: '',
-    PrepTime: 0,
-    Ingredient: [],
-    Description: '',
-    Creator: 'johnA',
-    Title: '',
-    Steps: [{
-        stepOrder: 0,
-        stepDescription: '',
-    }],
-  });
+ 
 
 
   //recipeTemplate.Author = useCookie('username').value
@@ -102,6 +167,13 @@
   }
 }
 `, { recipe: recipeTemplate.value });
+
+
+
+
+
+
+
     
 const { stepdata, steperror } = await useAsyncQuery(gql`
    mutation MyMutation {
