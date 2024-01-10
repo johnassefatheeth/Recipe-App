@@ -50,6 +50,14 @@
   
   <script setup>
 
+
+try {
+  require('firebase');
+  console.log('Package is installed');
+} catch (error) {
+  console.log('Package is not installed');
+}
+
   const recipeTemplate = ref({
     Category: '',
     PrepTime: 0,
@@ -67,66 +75,66 @@
   //recipeTemplate.Author = useCookie('username').value
   
 
-//   const saveRecipe = async () => {
-//     const { data, error } = await useAsyncQuery(gql`
-//       mutation MyMutation {
-//   insert_food_recipe_Recipes(objects: {Catagory_id: 1, Creator_id: 2, description: "kj", preparation_time: 10, title: "doro", featured_img: 1}) {
-//     returning {
-//       id
-//     }
-//   }
-// }
-//     `, { recipe: recipeTemplate.value });
+  const saveRecipe = async () => {
+    const { data, error } = await useAsyncQuery(gql`
+      mutation MyMutation {
+  insert_food_recipe_Recipes(objects: {Catagory_id: 1, Creator_id: 2, description: "kj", preparation_time: 10, title: "doro", featured_img: 1}) {
+    returning {
+      id
+    }
+  }
+}
+    `, { recipe: recipeTemplate.value });
 
-//     const { imgdata, imgerror } = await useAsyncQuery(gql`
-//    mutation MyMutation {
-//   insert_food_recipe_Images(objects: {url: "https://www.pexels.com/search/food/"}) {
-//     returning {
-//       id
-//     }
-//   }
-// }
-// `, { recipe: recipeTemplate.value });
+    const { imgdata, imgerror } = await useAsyncQuery(gql`
+   mutation MyMutation {
+  insert_food_recipe_Images(objects: {url: "https://www.pexels.com/search/food/"}) {
+    returning {
+      id
+    }
+  }
+}
+`, { recipe: recipeTemplate.value });
     
-// const { stepdata, steperror } = await useAsyncQuery(gql`
-//    mutation MyMutation {
-//   insert_food_recipe_Steps(objects: {recipe_id: 10, dscriptoin: "jkjh", step_order: 3}){
-//     returning {
-//       recipe_id
-//     }
-//   }
-// }
-// `, { recipe: recipeTemplate.value });
+const { stepdata, steperror } = await useAsyncQuery(gql`
+   mutation MyMutation {
+  insert_food_recipe_Steps(objects: {recipe_id: 10, dscriptoin: "jkjh", step_order: 3}){
+    returning {
+      recipe_id
+    }
+  }
+}
+`, { recipe: recipeTemplate.value });
 
 
-// const { ingdata, ingerror } = await useAsyncQuery(gql`
-//    mutation MyMutation {
-//   insert_food_recipe_RecipeIngredients(objects: {Recipe_id: 10, quantity: 1.5, unit: "g", Ingredient_id: 10}) {
-//     returning {
-//       Recipe_id
-//     }
-//   }
-// }
+const { ingdata, ingerror } = await useAsyncQuery(gql`
+   mutation MyMutation {
+  insert_food_recipe_RecipeIngredients(objects: {Recipe_id: 10, quantity: 1.5, unit: "g", Ingredient_id: 10}) {
+    returning {
+      Recipe_id
+    }
+  }
+}
 
-// `, { recipe: recipeTemplate.value });
-//   };
+`, { recipe: recipeTemplate.value });
+  };
   
-//   const query = await useAsyncQuery(gql`
-//     query MyQuery {
-//       food_recipe_Categories {
-//         id
-//         name
-//       }
-//     }
-//   `);
+  const query = await useAsyncQuery(gql`
+    query MyQuery {
+      food_recipe_Categories {
+        id
+        name
+      }
+    }
+  `);
   
-//   const ingredients = await useAsyncQuery(gql`
-//     query MyQuery {
-//       food_recipe_Ingredients {
-//         name
-//       }
-//     }
-//   `);
+  const ingredients = await useAsyncQuery(gql`
+    query MyQuery {
+      food_recipe_Ingredients {
+        name
+      }
+    }
+  `);
   
   
   </script>
