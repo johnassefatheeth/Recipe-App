@@ -1,9 +1,18 @@
 <template>
     <div>
         {{ recipeTemplate }}
+        <VForm
+          class="bg-white p-5 rounded"
+          :validation-schema="schema"
+          :initial-values="initialValues"
+          v-slot="{ meta: formMeta, errors: formErrors }"
+          @submit="handleSubmit"
+        >
+
       <div class="my-4">
         <label for="title" class="text-lg font-bold">Title</label>
-        <input v-model="recipeTemplate.Title" type="text" id="title" name="title" class="w-full p-2 border border-gray-300 rounded">
+        <VField v-model="recipeTemplate.Title" type="text" id="title" name="title" class="w-full p-2 border border-gray-300 rounded"/>
+        <VErrorMessage name="title" as="p" class="mt-2 text-sm text-red-600" />
       </div>
   
       <div class="my-4">
@@ -15,12 +24,14 @@
   
       <div class="my-4">
         <label for="preparationTime" class="text-lg font-bold">Preparation Time</label>
-        <input v-model="recipeTemplate.PrepTime" type="number" id="preparationTime" name="preparationTime" class="w-full p-2 border border-gray-300 rounded">
-      </div>
+        <VField v-model="recipeTemplate.PrepTime" type="number" id="preparationTime" name="preparationTime" class="w-full p-2 border border-gray-300 rounded"/>
+        <VErrorMessage name="preparationTime" as="p" class="mt-2 text-sm text-red-600" />
+    </div>
   
       <div class="my-4">
         <label for="description" class="text-lg font-bold">Description</label>
-        <input v-model="recipeTemplate.Description" type="text" id="description" name="description" class="w-full p-2 border border-gray-300 rounded">
+        <VField v-model="recipeTemplate.Description" type="text" id="description" name="description" class="w-full p-2 border border-gray-300 rounded"/>
+        <VErrorMessage name="description" as="p" class="mt-2 text-sm text-red-600" />
     </div>
   
       <div class="my-4">
@@ -51,12 +62,30 @@
         Save
       </button>
     </div>
+    </VForm>
     </div>
   </template>
   
   <script setup>
 
   import {useMutation} from '@vue/apollo-composable';
+  import { number, object, string, ref as yupRef } from "yup";
+
+
+
+const handleSubmit= ()=>{
+
+}
+
+
+const initialValues = {  description: "",title:"",preparationTime:0};
+
+const schema = object({
+    
+    description: string().required().min(10).label("description"),
+    title: string().required().min(3).label("Title"),
+    preparationTime: number().required().min(2).max(3600).label("Preparation Time"),
+  });
 
 
 
@@ -73,7 +102,7 @@
   }],
     imgUrl: '',
     imgId:0,
-    recipeId:0,
+    recipeId: 0,
   });
 
 
@@ -95,6 +124,7 @@ const addImage = async () => {
 
     recipeTemplate.imgId = result.data.insert_food_recipe_Images.returning[0].id
     console.log(recipeTemplate.imgId ); // Access the result using result.data
+    return recipeTemplate.imgId
 
     // If you want to access the returned data directly, you can use result.data
     // console.log(result.data);
@@ -171,27 +201,30 @@ const removeStep = (index) => {
   
 
   const saveRecipe = async () => {
-    
   try {
     await addImage(); // Wait for the completion of addImage()
-console.log(recipeTemplate.imgId )
     
 
     const { mutate } = useMutation(CREATE_RECIPE_MUTATION);
 
-    const { data } = await mutate({
-      catagory: recipeTemplate.value.Category,
-      creator: recipeTemplate.value.Creator,
-      description: recipeTemplate.value.Description,
-      preparation_time: recipeTemplate.value.PrepTime,
-      title: recipeTemplate.value.Title,
-      featured_img: recipeTemplate.value.imgId,
-    });
+    setTimeout(async () => {
+      try {
+        console.log(recipeTemplate.imgId);
+        const { data } = await mutate({
+          catagory: recipeTemplate.value.Category,
+          creator: recipeTemplate.value.Creator,
+          description: recipeTemplate.value.Description,
+          preparation_time: recipeTemplate.value.PrepTime,
+          title: recipeTemplate.value.Title,
+          featured_img: recipeTemplate.value.imgId,
+        });
 
-    recipeTemplate.recipeId =
-      data.insert_food_recipe_Recipes.returning[0].id;
-    console.log(recipeTemplate.recipeId); // Access the result using result.data
-
+        recipeTemplate.recipeId = data.insert_food_recipe_Recipes.returning[0].id;
+        console.log(recipeTemplate.recipeId); // Access the result using result.data
+      } catch (error) {
+        console.log(error);
+      }
+    }, 1500); // Delay the execution by 1.5 seconds
   } catch (error) {
     console.log(error);
   }

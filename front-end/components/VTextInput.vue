@@ -5,7 +5,7 @@
       </div>
       <div class="flex items-center space-x-4">
         <div class="relative rounded-md shadow-sm flex-grow focus-within:ring focus-within:border-blue-300">
-          <VField :name="name" v-slot="{ field, meta, errors }">
+          <VField :name="name" v-slot="{ field, meta, errors }" >
             <input
               v-bind="field"
               class="form-input block w-full sm:text-sm sm:leading-5"
