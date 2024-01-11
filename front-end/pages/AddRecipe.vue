@@ -9,7 +9,7 @@
       <div class="my-4">
         <label for="category" class="text-lg font-bold">Category</label>
         <select v-model="recipeTemplate.Category" id="category" name="category" class="w-full p-2 border border-gray-300 rounded">
-          <option v-for="category in query.data.value.food_recipe_Categories" :value="category.name" :key="category.id">{{ category.name }}</option>
+          <option v-for="category in query.data.value.food_recipe_Categories" :value="category.id" :key="category.id">{{ category.name }}</option>
         </select>
       </div>
   
@@ -47,7 +47,7 @@
   </div>
   
       <div class="my-4">
-      <button @click="addImage" class="bg-green-500 text-white font-semibold py-2 px-4 rounded">
+      <button @click="saveRecipe" class="bg-green-500 text-white font-semibold py-2 px-4 rounded">
         Save
       </button>
     </div>
@@ -55,60 +55,57 @@
   </template>
   
   <script setup>
-import $apollo from '@/plugins/apollo'
-import { gql, useMutation } from '@vue/apollo-composable'
-import { ref } from 'vue'
+
+  import {useMutation} from '@vue/apollo-composable';
 
 
-const { mutate: insertImage, loading: imgloading, error: imgerror } = useMutation(gql`
-  mutation MyMutation($url: String!) {
-    insert_food_recipe_Images(objects: { url: $url }) {
-      returning {
-        id
-      }
-    }
-  }
-`);
 
-const addImage = async () => {
-
-    const{data}=await $apollo.mutate({
-      mutation: gql`
-        mutation MyMutation($url: String!) {
-          insert_food_recipe_Images(objects: { url: $url }) {
-            returning {
-              id
-            }
-          }
-        }
-      `,
-      variables: {
-        url: recipeTemplate.value.imgUrl
-      }
-    });
-
-    console.log(data)
-
-
-//   await insertImage({
-//     url: recipeTemplate.value.imgUrl
-//   });
-//   router.push({path: '/'})
-};
-
- const recipeTemplate = ref({
-    Category: '',
+  const recipeTemplate = ref({
+    Category: 0,
     PrepTime: 0,
     Ingredient: [],
     Description: '',
-    Creator: 'johnA',
+    Creator: 1,
     Title: '',
     Steps: [{
         stepOrder: 0,
         stepDescription: '',
   }],
     imgUrl: '',
+    imgId:0,
+    recipeId:0,
   });
+
+
+const addImage = async () => {
+  const CREATE_IMAGE_MUTATION = gql`
+    mutation MyMutation($url: String!) {
+      insert_food_recipe_Images(objects: { url: $url }) {
+        returning {
+          id
+        }
+      }
+    }
+  `;
+
+  try {
+    const { mutate } = useMutation(CREATE_IMAGE_MUTATION);
+
+    const result = await mutate({ url: recipeTemplate.value.imgUrl });
+
+    recipeTemplate.imgId = result.data.insert_food_recipe_Images.returning[0].id
+    console.log(recipeTemplate.imgId ); // Access the result using result.data
+
+    // If you want to access the returned data directly, you can use result.data
+    // console.log(result.data);
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+ 
 
 
   const addStep = () => {
@@ -144,59 +141,61 @@ const removeStep = (index) => {
  
 
 
-  //recipeTemplate.Author = useCookie('username').value
+  //recipeTemplate.Author = useCookie('username').
+  
+  const CREATE_RECIPE_MUTATION = gql`
+      mutation MyMutation(
+        $catagory: Int!
+        $creator: Int!
+        $description: String!
+        $preparation_time: Int!
+        $title: String!
+        $featured_img: Int!
+      ) {
+        insert_food_recipe_Recipes(
+          objects: {
+            Catagory_id: $catagory
+            Creator_id: $creator
+            description: $description
+            preparation_time: $preparation_time
+            title: $title
+            featured_img: $featured_img
+          }
+        ) {
+          returning {
+            id
+          }
+        }
+      }
+    `;
   
 
   const saveRecipe = async () => {
-    const { data, error } = await useAsyncQuery(gql`
-      mutation MyMutation {
-  insert_food_recipe_Recipes(objects: {Catagory_id: 1, Creator_id: 2, description: "kj", preparation_time: 10, title: "doro", featured_img: 1}) {
-    returning {
-      id
-    }
-  }
-}
-    `, { recipe: recipeTemplate.value });
-
-    const { imgdata, imgerror } = await useAsyncQuery(gql`
-   mutation MyMutation {
-  insert_food_recipe_Images(objects: {url: "https://www.pexels.com/search/food/"}) {
-    returning {
-      id
-    }
-  }
-}
-`, { recipe: recipeTemplate.value });
-
-
-
-
-
-
-
     
-const { stepdata, steperror } = await useAsyncQuery(gql`
-   mutation MyMutation {
-  insert_food_recipe_Steps(objects: {recipe_id: 10, dscriptoin: "jkjh", step_order: 3}){
-    returning {
-      recipe_id
-    }
+  try {
+    await addImage(); // Wait for the completion of addImage()
+console.log(recipeTemplate.imgId )
+    
+
+    const { mutate } = useMutation(CREATE_RECIPE_MUTATION);
+
+    const { data } = await mutate({
+      catagory: recipeTemplate.value.Category,
+      creator: recipeTemplate.value.Creator,
+      description: recipeTemplate.value.Description,
+      preparation_time: recipeTemplate.value.PrepTime,
+      title: recipeTemplate.value.Title,
+      featured_img: recipeTemplate.value.imgId,
+    });
+
+    recipeTemplate.recipeId =
+      data.insert_food_recipe_Recipes.returning[0].id;
+    console.log(recipeTemplate.recipeId); // Access the result using result.data
+
+  } catch (error) {
+    console.log(error);
   }
-}
-`, { recipe: recipeTemplate.value });
-
-
-const { ingdata, ingerror } = await useAsyncQuery(gql`
-   mutation MyMutation {
-  insert_food_recipe_RecipeIngredients(objects: {Recipe_id: 10, quantity: 1.5, unit: "g", Ingredient_id: 10}) {
-    returning {
-      Recipe_id
-    }
-  }
-}
-
-`, { recipe: recipeTemplate.value });
-  };
+};
   
   const query = await useAsyncQuery(gql`
     query MyQuery {

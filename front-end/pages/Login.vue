@@ -74,7 +74,7 @@ const handleSubmit= ()=>{
 }
 
 
-const initialValues = { email: "", password: "", confirmed: "" ,name:"",userName:""};
+const initialValues = {  password: "",userName:""};
 
 const schema = object({
     
