@@ -83,51 +83,91 @@
   </template>
   
   <script setup>
-  import { object, string, ref as yupRef } from "yup";
-  import { configure } from "vee-validate";
-  import checkUserByEmailHandler from '~/plugins/hasuraActions.js';
-  
-  
-//   const existingEmail = async (value) => {
-//     const result = await checkUserByEmailHandler({ email: 'example@example.com' });
-//     console.log(result);
-//     }
-  
-  const handleSubmit = (values, actions) => {
-    console.log(values);
-    actions.resetForm();
-  };
-  
-  configure({
-    validateOnBlur: true,
-    validateOnChange: true,
-    validateOnInput: false,
-    validateOnModelUpdate: true,
-  });
-  
-  const schema = object({
-    email: string()
-      .required()
-      .email(),
-    //   .test(
-    //     "email-is-taken",
-    //     "Email is already taken",
-    //     async (value) => !(await existingEmail(value))
-    //   )
-    //   .label("Email Address"),
-    password: string().required().min(8).label("Your Password"),
-    confirmed: string()
-      .required()
-      .oneOf([yupRef("password")], "Passwords do not match")
-      .label("Your Confirmation Password"),
-    name: string()
-      .required()
-      .min(2),
-    userName: string().required()
-  });
-  
-  const initialValues = { email: "", password: "", confirmed: "" ,name:"",userName:""};
-  </script>
+import { object, string, ref as yupRef } from "yup";
+import { configure } from "vee-validate";
+import bcrypt from 'bcryptjs'; // Import the bcrypt library
+import checkUserByEmailHandler from '~/plugins/hasuraActions.js';
+
+const saltRounds = 10; // Number of salt rounds for bcrypt
+
+const encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(saltRounds);
+  const hashedPassword = await bcrypt.hash(password, salt);
+  return hashedPassword;
+};
+
+
+
+const ADD_USER = gql`mutation MyMutation(
+  $userName: String!,
+  $email: String!,
+  $name: String!,
+  $password: String!
+) {
+  insert_food_recipe_Users(objects: {
+    UserName: $userName,
+    email: $email,
+    name: $name,
+    password: $password
+  }) {
+    returning {
+      id
+      UserName
+      email
+      name
+    }
+  }
+}`;
+
+
+
+
+
+
+
+
+const handleSubmit = async (values, actions) => {
+  const encryptedPassword = await encryptPassword(values.password);
+  console.log({ ...values, password: encryptedPassword });
+  const { mutate } = useMutation(ADD_USER);
+  try {
+      const { data } = await  mutate({
+        userName: values.userName,
+        email: values.email,
+        name: values.name,
+        password:encryptedPassword
+      });
+      console.log(data);
+  actions.resetForm();
+    } catch (error) {
+      console.log(error);
+    }
+};
+
+configure({
+  validateOnBlur: true,
+  validateOnChange: true,
+  validateOnInput: false,
+  validateOnModelUpdate: true,
+});
+
+const schema = object({
+  email: string()
+    .required()
+    .email(),
+  password: string().required().min(8).label("Your Password"),
+  confirmed: string()
+    .required()
+    .oneOf([yupRef("password")], "Passwords do not match")
+    .label("Your Confirmation Password"),
+  name: string()
+    .required()
+    .min(2),
+  userName: string().required()
+});
+
+const initialValues = { email: "", password: "", confirmed: "", name: "", userName: "" };
+</script>
   
   <style scoped>
     .min-h-screen {
