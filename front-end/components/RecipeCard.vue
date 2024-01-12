@@ -4,7 +4,7 @@
         <div class="p-4">
             <p class="text-lg">{{catagory}}</p>
             <p class="text-3xl">{{title}}</p>
-            <p class="text-xl float-right relative bottom-0">preparation time</p>
+            <p class="text-xl float-right relative bottom-0">{{preparationTime}} mins</p>
         </div>
         <p>{{rating}}</p>
 

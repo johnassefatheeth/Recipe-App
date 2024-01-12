@@ -43,7 +43,7 @@
       <div class="my-4">
         <label class="text-lg font-bold">Ingredients</label>
         <div class="flex flex-wrap">
-            <button v-for="ingredient in ingredients.data.value.food_recipe_Ingredients" :key="ingredient.name" class="w-full md:w-auto bg-blue-500 text-white font-semibold py-2 px-4 rounded mr-2 mb-2" @click="recipeTemplate.Ingredient.includes(ingredient.name) ?recipeTemplate.Ingredient.splice(recipeTemplate.Ingredient.indexOf(item), 1):recipeTemplate.Ingredient.push(ingredient.name)" :class="{ 'bg-blue-500': !recipeTemplate.Ingredient.includes(ingredient.name), 'bg-green-500': recipeTemplate.Ingredient.includes(ingredient.name) }"> {{ ingredient.name }} </button>
+            <button v-for="ingredient in ingredients.data.value.food_recipe_Ingredients" :key="ingredient.id" class="w-full md:w-auto bg-blue-500 text-white font-semibold py-2 px-4 rounded mr-2 mb-2" @click="recipeTemplate.Ingredient.includes(ingredient.id) ?recipeTemplate.Ingredient.splice(recipeTemplate.Ingredient.indexOf(item), 1):recipeTemplate.Ingredient.push(ingredient.id)" :class="{ 'bg-blue-500': !recipeTemplate.Ingredient.includes(ingredient.id), 'bg-green-500': recipeTemplate.Ingredient.includes(ingredient.id) }"> {{ ingredient.name }} </button>
         </div>
       </div>
   
@@ -58,7 +58,7 @@
   </div>
   
       <div class="my-4">
-      <button @click="saveRecipe" class="bg-green-500 text-white font-semibold py-2 px-4 rounded">
+      <button @click="addingerdient" class="bg-green-500 text-white font-semibold py-2 px-4 rounded">
         Save
       </button>
     </div>
@@ -101,8 +101,6 @@ const schema = object({
         stepDescription: '',
   }],
     imgUrl: '',
-    imgId:0,
-    recipeId: 0,
   });
 
 
@@ -121,10 +119,8 @@ const addImage = async () => {
     const { mutate } = useMutation(CREATE_IMAGE_MUTATION);
 
     const result = await mutate({ url: recipeTemplate.value.imgUrl });
-
-    recipeTemplate.imgId = result.data.insert_food_recipe_Images.returning[0].id
-    console.log(recipeTemplate.imgId ); // Access the result using result.data
-    return recipeTemplate.imgId
+ // Access the result using result.data
+    return result.data.insert_food_recipe_Images.returning[0].id;
 
     // If you want to access the returned data directly, you can use result.data
     // console.log(result.data);
@@ -202,33 +198,107 @@ const removeStep = (index) => {
 
   const saveRecipe = async () => {
   try {
-    await addImage(); // Wait for the completion of addImage()
-    
+    ; // Wait for the completion of addImage()
+    let imgId=await addImage()
 
     const { mutate } = useMutation(CREATE_RECIPE_MUTATION);
-
-    setTimeout(async () => {
+    
+    
       try {
-        console.log(recipeTemplate.imgId);
+        console.log(imgId);
         const { data } = await mutate({
           catagory: recipeTemplate.value.Category,
           creator: recipeTemplate.value.Creator,
           description: recipeTemplate.value.Description,
           preparation_time: recipeTemplate.value.PrepTime,
           title: recipeTemplate.value.Title,
-          featured_img: recipeTemplate.value.imgId,
+          featured_img: imgId,
         });
-
-        recipeTemplate.recipeId = data.insert_food_recipe_Recipes.returning[0].id;
-        console.log(recipeTemplate.recipeId); // Access the result using result.data
+ // Access the result using result.data
+        console.log(data.insert_food_recipe_Recipes.returning[0].id);
+        return data.insert_food_recipe_Recipes.returning[0].id;
       } catch (error) {
         console.log(error);
       }
-    }, 1500); // Delay the execution by 1.5 seconds
   } catch (error) {
     console.log(error);
   }
 };
+
+
+
+
+
+
+
+
+
+const ADD_INGREDIENT_MUTATION = gql`
+      mutation MyMutation($ingId: Int!, $recId: Int!) {
+  insert_food_recipe_RecipeIngredients(objects: {Ingredient_id: $ingId, Recipe_id: $recId}) {
+    returning {
+      id
+    }
+  }
+}
+    `;
+   const addingerdient = async () => {
+    let recId=await saveRecipe()
+    
+    const { mutate } = useMutation(ADD_INGREDIENT_MUTATION);
+    // console.log(recipeTemplate.value.Ingredient);
+    for (const ingredient of recipeTemplate.value.Ingredient) {
+   //console.log(ingredient);
+    try {
+      const { data } = await  mutate({
+        ingId: ingredient,
+        recId: recId,
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+};
+   
+ addsteps(recId)
+
+}
+
+const ADD_STEP_MUTATION = gql`
+      mutation MyMutation($stepOrder: Int!, $stepDescription: String!, $recId: Int!) {
+        insert_food_recipe_Steps(objects: {step_order: $stepOrder, dscriptoin: $stepDescription, recipe_id: $recId}) {
+    returning {
+      id
+    }
+  }
+}
+    `;
+
+
+const addsteps=async (recId)=>{
+  const { mutate } = useMutation(ADD_STEP_MUTATION);
+  for (const step of recipeTemplate.value.Steps) {
+    try {
+      const { data } = await  mutate({
+        stepOrder: step.stepOrder,
+        stepDescription: step.stepDescription,
+        recId: recId,
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+};
+
+
+useRouter().push('/RecipeDetails/'+recId);
+}
+
+
+
+
+
+
   
   const query = await useAsyncQuery(gql`
     query MyQuery {
@@ -243,6 +313,7 @@ const removeStep = (index) => {
     query MyQuery {
       food_recipe_Ingredients {
         name
+        id
       }
     }
   `);

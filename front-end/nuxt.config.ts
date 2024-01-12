@@ -11,9 +11,16 @@ export default defineNuxtConfig({
   apollo: {
     clients: {
       default: {
-        httpEndpoint: 'http://localhost:8080/v1/graphql'
-      }
+        httpEndpoint: 'http://localhost:8080/v1/graphql', 
+         httpLinkOptions: {
+              headers: {
+                'x-hasura-admin-secret': 'myadminsecretkey',
+          },
+      },
+      },
+      
     },
+    
   },
   plugins: [
     { src: '~/plugins/hasuraActions.js', mode: 'server' },
@@ -27,3 +34,4 @@ export default defineNuxtConfig({
     },
   },
 })
+ 
