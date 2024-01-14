@@ -8,6 +8,10 @@ export default defineNuxtConfig({
     dirs: ["./stores"],
   },
   ssr:false,
+  http:{
+    baseUrl:'http://localhost:8088',
+    proxyHeaders: true,
+  },
   apollo: {
     clients: {
       default: {
@@ -24,6 +28,7 @@ export default defineNuxtConfig({
   },
   plugins: [
     { src: '~/plugins/hasuraActions.js', mode: 'server' },
+    '~/plugins/api.js',
   ],
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],

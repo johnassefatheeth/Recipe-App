@@ -63,13 +63,17 @@
 
 <script setup>
  import { object, string, ref as yupRef } from "yup";
+import { useApi } from "~/plugins/api";
+
 
 
 const username = ref('');
 const password = ref('');
 
 
-const handleSubmit= ()=>{
+const handleSubmit= async()=>{
+  const { login } = useApi();
+  await login(username, password)
 
 }
 
