@@ -1,5 +1,5 @@
 <template>
-<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg transition-transform hover:shadow-xl transform hover:scale-105">
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg transition-transform hover:shadow-xl transform hover:scale-105 m-4">
   <div>
     <p class="text-3xl">{{ title }}</p>
     <p class="text-lg">{{ catagory }}</p>

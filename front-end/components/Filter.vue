@@ -1,7 +1,7 @@
 <template>
-    <div class="w-full bg-slate-400 p-6">
+    <div class="w-full bg-gradient-to-r from-blue-600 to-green-500 p-6">
       <ul class="flex justify-evenly items-center h-full">
-        <li class="w-full bg-slate-300 border-2">
+        <li class="w-full bg-gradient-to-r from-blue-600 to-green-500 border-2">
           <div>Category</div>
           <select v-model="recipeFilter.Category" defaultValue="Any" class="w-full">
             <option v-for="category in query.data.value.food_recipe_Categories" :value="category.name">{{ category.name }}</option>

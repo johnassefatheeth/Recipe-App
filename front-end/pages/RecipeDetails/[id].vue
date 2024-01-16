@@ -1,77 +1,78 @@
 <template>
-    <div class="p-4">
-      <div class="max-w-xl mx-auto bg-white rounded-lg shadow-md">
-        <div class="p-4" v-if="query.data && query.data.value">
-          <div v-if="store.userID==query.data.value.food_recipe_Recipes_by_pk.User.id">
-          <button @click="deleteRecipe">Delete recipe</button>
-          <button @click="editRecipe">Edit Recipe</button>
-          </div>
-          <h1 class="text-2xl font-bold mb-4">{{ query.data.value.food_recipe_Recipes_by_pk.title }}</h1>
-          <img class="w-full mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.Image.url" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Recipe Image">
-  
-          <h2 class="text-lg font-bold mb-2">Category: {{ query.data.value.food_recipe_Recipes_by_pk.Category.name }}</h2>
-          <p class="mb-4">Preparation Time: {{ query.data.value.food_recipe_Recipes_by_pk.preparation_time }} min</p>
-  
-          <h2 class="text-lg font-bold mb-2">Ingredients:</h2>
-          <ul class="list-disc list-inside mb-4">
-            <li v-for="ingredient in query.data.value.food_recipe_Recipes_by_pk.RecipeIngredients" :key="ingredient.Ingredient.name">
-              {{ ingredient.Ingredient.name }}
-            </li>
-          </ul>
-  
-          <h2 class="text-lg font-bold mb-2">Steps:</h2>
-          <ol class="list-decimal list-inside">
-            <li v-for="step in query.data.value.food_recipe_Recipes_by_pk.Steps" :key="step.dscriptoin">
-              {{ step.dscriptoin }}
-            </li>
-          </ol>
-  
-          <!-- New lines to display additional data -->
-          <h2 class="text-lg font-bold mb-2">Description:</h2>
-          <p>{{ query.data.value.food_recipe_Recipes_by_pk.description }}</p>
-  
-          <h2 class="text-lg font-bold mb-2">Created At:</h2>
-          <p>{{ query.data.value.food_recipe_Recipes_by_pk.created_at }}</p>
-  
-          <h2 class="text-lg font-bold mb-2">Featured Image:</h2>
-          <img class="w-full mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.featured_img" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Featured Image">
-  
-          <h2 class="text-lg font-bold mb-2">User:</h2>
-          <NuxtLink :to="`/UserProfile/${query.data.value.food_recipe_Recipes_by_pk.User.id}`">{{ query.data.value.food_recipe_Recipes_by_pk.User.name }}</NuxtLink>
-  
-          <!-- Section to display comments -->
-          <h2 class="text-lg font-bold mb-2">Comments:</h2>
-          <Comment :comments="query.data.value.food_recipe_Recipes_by_pk.Comments" />
-
-          <h2>Rating:{{ query.data.value.food_recipe_Recipes_by_pk.Ratings_aggregate.aggregate.avg.rating }}</h2>
-          <h2>Likes:{{ query.data.value.food_recipe_Recipes_by_pk.Likes_aggregate.aggregate.count }}</h2>
-          <h2>bookmarks:{{ query.data.value.food_recipe_Recipes_by_pk.Bookmarks_aggregate.aggregate.count }}</h2>
-          <div v-if="userloged">
-            <button v-if="!likedBeforeB && !likedNow" @click="addlike" class="m-4">Like</button>
-            <button @click="addbookmark">bookmark</button>
-            <select  v-model="rating">
-              <option value=1 >1</option>
-              <option value=2>2</option>
-              <option value=3>3</option>
-              <option value=4>4</option>
-              <option value=5>5</option>
-             </select>
-             <button @click="addrate">rate</button>
-            comment
-            <input type="textarea" v-model="comment">
-            <button @click="addcomment">comment</button>
-           
-
-          </div>
-          <!-- Add more lines here to display other data as needed -->
-  
-        </div>
-        <div v-else>
-          Loading...
-        </div>
+  <div class="p-4">
+    <div class="mx-auto bg-white rounded-lg shadow-md p-4" v-if="query.data && query.data.value">
+      <div v-if="store.userID == query.data.value.food_recipe_Recipes_by_pk.User.id">
+        <button @click="deleteRecipe" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-red active:bg-red-800">Delete recipe</button>
+        <button @click="editRecipe" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-yellow active:bg-yellow-800">Edit Recipe</button>
       </div>
+
+      <h1 class="text-2xl font-bold mb-4">{{ query.data.value.food_recipe_Recipes_by_pk.title }}</h1>
+      <img class="w-1/2 mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.Image.url" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Recipe Image">
+
+      <h2 class="text-lg font-bold mb-2">Category: {{ query.data.value.food_recipe_Recipes_by_pk.Category.name }}</h2>
+      <p class="mb-4">Preparation Time: {{ query.data.value.food_recipe_Recipes_by_pk.preparation_time }} min</p>
+
+      <h2 class="text-lg font-bold mb-2">Ingredients:</h2>
+      <ul class="list-disc list-inside mb-4">
+        <li v-for="ingredient in query.data.value.food_recipe_Recipes_by_pk.RecipeIngredients" :key="ingredient.Ingredient.name">
+          {{ ingredient.Ingredient.name }}
+        </li>
+      </ul>
+
+      <h2 class="text-lg font-bold mb-2">Steps:</h2>
+      <ol class="list-decimal list-inside">
+        <li v-for="step in query.data.value.food_recipe_Recipes_by_pk.Steps" :key="step.dscriptoin">
+          {{ step.dscriptoin }}
+        </li>
+      </ol>
+
+      <!-- New lines to display additional data -->
+      <h2 class="text-lg font-bold mb-2">Description:</h2>
+      <p>{{ query.data.value.food_recipe_Recipes_by_pk.description }}</p>
+
+      <h2 class="text-lg font-bold mb-2">Created At:</h2>
+      <p>{{ query.data.value.food_recipe_Recipes_by_pk.created_at }}</p>
+
+      <h2 class="text-lg font-bold mb-2">Featured Image:</h2>
+      <img class="w-1/2 mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.featured_img" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Featured Image">
+
+      <h2 class="text-lg font-bold mb-2">User:</h2>
+      <NuxtLink :to="`/UserProfile/${query.data.value.food_recipe_Recipes_by_pk.User.id}`" class="text-blue-500 hover:underline">{{ query.data.value.food_recipe_Recipes_by_pk.User.name }}</NuxtLink>
+
+      <!-- Section to display comments -->
+      <h2 class="text-lg font-bold mb-2">Comments:</h2>
+      <Comment :comments="query.data.value.food_recipe_Recipes_by_pk.Comments" />
+
+      <div>
+        <h2 class="font-bold mb-2">Rating: {{ query.data.value.food_recipe_Recipes_by_pk.Ratings_aggregate.aggregate.avg.rating }}/5</h2>
+        <h2 class="font-bold mb-2">Likes: {{ query.data.value.food_recipe_Recipes_by_pk.Likes_aggregate.aggregate.count }}</h2>
+        <h2 class="font-bold mb-2">Bookmarked by: {{ query.data.value.food_recipe_Recipes_by_pk.Bookmarks_aggregate.aggregate.count }} people</h2>
+      </div>
+
+      <div v-if="userloged">
+        <button v-if="!likedBeforeB && !likedNow" @click="addlike" class="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-800">Like 👍</button>
+        <button @click="addbookmark" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-green active:bg-green-800">Bookmark 🔖</button>
+        <select v-model="rating" class="mt-4 p-2 border border-gray-300 rounded">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
+        <button @click="addrate" class="mt-4 bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-yellow active:bg-yellow-800">Rate ⭐</button>
+        <input type="textarea" v-model="comment" class="mt-4 p-2 border border-gray-300 rounded" placeholder="Add comment">
+        <button @click="addcomment" class="mt-4 bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-purple active:bg-purple-800">Comment 💬</button>
+      </div>
+
+      <!-- Add more lines here to display other data as needed -->
     </div>
-  </template>
+
+    <div v-else>
+      Loading...
+    </div>
+  </div>
+</template>
+
 
 <script setup>
  
