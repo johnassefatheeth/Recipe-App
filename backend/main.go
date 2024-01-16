@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/machinebox/graphql"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
@@ -14,23 +16,34 @@ type User struct {
 	Password string `json:"password"`
 }
 
+func GenerateJWTToken(userID interface{}) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": userID,
+		// Add other claims if needed
+	})
+
+	// Replace "your-secret-key" with a secret key for signing the token
+	tokenString, err := token.SignedString([]byte("your-secret-key"))
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
 func main() {
-	// Create a new http.Client with custom headers
 	client := &http.Client{
 		Transport: &http.Transport{},
 	}
 
-	// Create a new graphql.Client with the customized http.Client
 	gqlClient := graphql.NewClient("http://localhost:8080/v1/graphql", graphql.WithHTTPClient(client))
 
-	// Create a Gin router
 	router := gin.Default()
 
-	// Add CORS middleware
 	router.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization,email,password")
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(200)
 			return
@@ -38,46 +51,58 @@ func main() {
 		c.Next()
 	})
 
-	// Define a route to perform a GraphQL request
 	router.GET("/graphql-request", func(c *gin.Context) {
-		// Get the query parameters from the request
-		email := c.Query("email")
-		password := c.Query("password")
+		email := c.GetHeader("email")
+		password := c.GetHeader("password")
 
-		// Define your GraphQL query or mutation
 		query := fmt.Sprintf(`query LoginQuery {
-			food_recipe_Users(where: { email: "%s", password: "%s" }) {
-			  name
-			  UserName
-			  password
+			food_recipe_Users(where: { email: { _eq: "%s" } }) {
+				id
+				password
 			}
-		  }`, email, password)
+		}`, email)
 
-		// Create a new request using the client
 		req := graphql.NewRequest(query)
-
-		// Set custom headers for the GraphQL request
 		req.Header.Set("x-hasura-admin-secret", "myadminsecretkey")
 		req.Header.Set("content-type", "application/json")
 
-		// Perform the GraphQL request
 		var response struct {
-			Data struct {
-				Users []User `json:"food_recipe_Users"`
-			} `json:"data"`
+			FoodRecipeUsers []struct {
+				ID       interface{} `json:"id"`
+				Password string      `json:"password"`
+			} `json:"food_recipe_Users"`
 		}
+
 		if err := gqlClient.Run(context.Background(), req, &response); err != nil {
-			// Handle error
-			c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("GraphQL request failed: %s", err)})
+			c.JSON(http.StatusOK, gin.H{"error": fmt.Sprintf("GraphQL request failed: %s", err)})
 			return
 		}
 
-		// Access the users from the response
-		users := response.Data.Users
+		if len(response.FoodRecipeUsers) == 0 {
+			c.JSON(http.StatusOK, gin.H{"error": "User not found"})
+			return
+		}
 
-		c.JSON(http.StatusOK, gin.H{"users": users})
+		// Get the hashed password from the response
+		hashedPassword := response.FoodRecipeUsers[0].Password
+
+		// Compare the hashed password with the provided password
+		err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{"error": "Invalid password"})
+			return
+		}
+
+		// Password is valid
+		userID := response.FoodRecipeUsers[0].ID
+		token, err := GenerateJWTToken(userID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate JWT token"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"user_id": userID, "token": token})
 	})
 
-	// Run the Gin server
 	router.Run(":8088")
 }

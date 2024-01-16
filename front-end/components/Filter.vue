@@ -21,14 +21,9 @@
         </li>
         <li class="w-full bg-slate-300 border-2">
           <div>Ingredient</div>
-          <button
-            v-for="ingredient in ingredients.data.value.food_recipe_Ingredients"
-            :key="ingredient.name"
-            class="w-full bg-slate-300 border-2"
-            @click="recipeFilter.Ingredient.includes(ingredient.name) ?recipeFilter.Ingredient.splice(recipeFilter.Ingredient.indexOf(item), 1):recipeFilter.Ingredient.push(ingredient.name)" 
-          >
-            {{ ingredient.name }}
-          </button>
+          <div class="flex flex-wrap">
+            <button v-for="ingredient in ingredients.data.value.food_recipe_Ingredients" :key="ingredient.id" class="w-full md:w-auto bg-blue-500 text-white font-semibold py-2 px-4 rounded mr-2 mb-2" @click="recipeFilter.Ingredient.includes(ingredient.id) ?recipeFilter.Ingredient.splice(recipeFilter.Ingredient.indexOf(item), 1):recipeFilter.Ingredient.push(ingredient.id)" :class="{ 'bg-blue-500': !recipeFilter.Ingredient.includes(ingredient.id), 'bg-green-500': recipeFilter.Ingredient.includes(ingredient.id) }"> {{ ingredient.name }} </button>
+        </div>
           <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4" @click="recipeFilter.SearchMethod = 3">Filter</button>
         </li>
         <li class="w-full bg-slate-300 border-2">

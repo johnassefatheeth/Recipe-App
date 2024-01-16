@@ -23,7 +23,23 @@
 </template>
 
 <script setup>
+import {useUserStore} from "~/stores"
+
+  const store=useUserStore()
 const userId=useRoute().params.UserId
+
+onMounted(async() => {
+
+var enableEditing
+
+if(userId==store.userID)
+  enableEditing=true
+else
+  enableEditing=false
+})
+
+
+
 
 
 const query=await useAsyncQuery(gql`

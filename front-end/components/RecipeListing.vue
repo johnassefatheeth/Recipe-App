@@ -1,7 +1,19 @@
 <template>
     <div>
-      <p>Search Method: {{ props.myObject.SearchMethod }}</p>
-      <p >Query Result: {{  queryResult.value }}</p>
+      <!-- <p v-if="queryResult.data" >Query Result: {{  queryResult.data.food_recipe_Recipes}}</p> -->
+      <div v-if="queryResult.data" class="flex flex-wrap">
+      <div v-for="recipe in queryResult.data.food_recipe_Recipes" :key="recipe.id" class="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 p-4">
+        <div @click="goToRecipe(recipe.id)">
+          <RecipeIntro
+            :image="recipe.Image.url"
+            :title="recipe.title"
+            :preparationTime="recipe.preparation_time"
+            :author="recipe.User.name"
+            :rating="recipe.Ratings_aggregate.aggregate.avg.rating"
+          />
+        </div>
+      </div>
+    </div>
       
     </div>
   </template>
@@ -14,37 +26,27 @@ const props = defineProps({
       required: true
     }})
     
-    let queryResult = ref({});
+    var queryResult = ref({});
    
   const executeQuery = async (searchMethod) => {
     
   
     switch (searchMethod) {
       case 1:
-        queryResult = await useAsyncQuery(gql`query MyQuery ($Cat: String!) {
+        queryResult.value = await useAsyncQuery(gql`query MyQuery ($Cat: String!) {
           food_recipe_Recipes(where: {Category: {name: {_eq: $Cat}}}) {
             title
             preparation_time
+            Category {
+            name
+            }
+            id
             User {
             name
-            Likes_aggregate {
-                aggregate {
-                sum {
-                    User_id
-                }
-                }
-            }
             }
             
             Image {
             url
-            }
-            Likes_aggregate {
-            aggregate {
-                sum {
-                User_id
-                }
-            }
             }
             Ratings_aggregate {
             aggregate {
@@ -57,30 +59,20 @@ const props = defineProps({
         }`, { Cat: props.myObject.Category });
         break;
       case 2:
-        queryResult = await useAsyncQuery(gql`query MyQuery ($prp: Int!) {
+        queryResult.value = await useAsyncQuery(gql`query MyQuery ($prp: Int!) {
           food_recipe_Recipes(where: {preparation_time: {_lte: $prp}}) {
             title
             preparation_time
+            Category {
+            name
+            }
+            id
             User {
             name
-            Likes_aggregate {
-                aggregate {
-                sum {
-                    User_id
-                }
-                }
-            }
             }
             
             Image {
             url
-            }
-            Likes_aggregate {
-            aggregate {
-                sum {
-                User_id
-                }
-            }
             }
             Ratings_aggregate {
             aggregate {
@@ -96,30 +88,20 @@ const props = defineProps({
         // Query for search method 3
         break;
       case 4:
-        queryResult = await useAsyncQuery(gql`query MyQuery ($User: String!) {
+        queryResult.value = await useAsyncQuery(gql`query MyQuery ($User: String!) {
           food_recipe_Recipes(where: {User: {UserName: {_ilike: $User}}}) {
             title
             preparation_time
+            Category {
+            name
+            }
+            id
             User {
             name
-            Likes_aggregate {
-                aggregate {
-                sum {
-                    User_id
-                }
-                }
-            }
             }
             
             Image {
             url
-            }
-            Likes_aggregate {
-            aggregate {
-                sum {
-                User_id
-                }
-            }
             }
             Ratings_aggregate {
             aggregate {
@@ -132,10 +114,14 @@ const props = defineProps({
         }`, { User: props.myObject.Creator });
         break;
       case 5:
-        queryResult = await useAsyncQuery(gql`query MyQuery ($Title: String!) {
+        queryResult.value = await useAsyncQuery(gql`query MyQuery ($Title: String!) {
           food_recipe_Recipes(where: {title: {_ilike: $Title}}) {
             title
             preparation_time
+            Category {
+            name
+            }
+            id
             User {
             name
             Likes_aggregate {
@@ -171,12 +157,18 @@ const props = defineProps({
         break;
     }
   
-    console.log(queryResult);
+    
   };
-  
+  console.log(queryResult.value);
   watch(() => props.myObject.SearchMethod, (newSearchMethod, oldSearchMethod) => {
     executeQuery(newSearchMethod);
   });
+
+
+  const goToRecipe = (id) => {
+     navigateTo(`/RecipeDetails/${id}`)
+    
+}
   </script>
 
 

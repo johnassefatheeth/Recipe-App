@@ -26,6 +26,8 @@
 </template>
 <script setup>
 
+
+
 const goToRecipe = (id) => {
      navigateTo(`/RecipeDetails/${id}`)
     

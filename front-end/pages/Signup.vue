@@ -85,8 +85,18 @@
   <script setup>
 import { object, string, ref as yupRef } from "yup";
 import { configure } from "vee-validate";
-import bcrypt from 'bcryptjs'; // Import the bcrypt library
-import checkUserByEmailHandler from '~/plugins/hasuraActions.js';
+import bcrypt from 'bcryptjs'; 
+import {useUserStore} from "~/stores"
+
+
+const store=useUserStore()
+const router=useRouter()
+
+if(store.userID){
+  router.push('/')
+}
+
+
 
 const saltRounds = 10; // Number of salt rounds for bcrypt
 
