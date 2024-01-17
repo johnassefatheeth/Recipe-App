@@ -7,7 +7,7 @@
       </div>
 
       <h1 class="text-2xl font-bold mb-4">{{ query.data.value.food_recipe_Recipes_by_pk.title }}</h1>
-      <img class="w-1/2 mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.Image.url" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Recipe Image">
+      <img class="w-96 h-96 mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.Image.url" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Recipe Image">
 
       <h2 class="text-lg font-bold mb-2">Category: {{ query.data.value.food_recipe_Recipes_by_pk.Category.name }}</h2>
       <p class="mb-4">Preparation Time: {{ query.data.value.food_recipe_Recipes_by_pk.preparation_time }} min</p>
@@ -34,7 +34,7 @@
       <p>{{ query.data.value.food_recipe_Recipes_by_pk.created_at }}</p>
 
       <h2 class="text-lg font-bold mb-2">Featured Image:</h2>
-      <img class="w-1/2 mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.featured_img" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Featured Image">
+      <img class="w-96 h-96 mb-4" v-if="query.data.value.food_recipe_Recipes_by_pk.featured_img" :src="query.data.value.food_recipe_Recipes_by_pk.Image.url" alt="Featured Image">
 
       <h2 class="text-lg font-bold mb-2">User:</h2>
       <NuxtLink :to="`/UserProfile/${query.data.value.food_recipe_Recipes_by_pk.User.id}`" class="text-blue-500 hover:underline">{{ query.data.value.food_recipe_Recipes_by_pk.User.name }}</NuxtLink>
@@ -49,7 +49,7 @@
         <h2 class="font-bold mb-2">Bookmarked by: {{ query.data.value.food_recipe_Recipes_by_pk.Bookmarks_aggregate.aggregate.count }} people</h2>
       </div>
 
-      <div v-if="userloged">
+      <div v-if="userloged && store.userID != query.data.value.food_recipe_Recipes_by_pk.User.id">
         <button v-if="!likedBeforeB && !likedNow" @click="addlike" class="m-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue active:bg-blue-800">Like 👍</button>
         <button @click="addbookmark" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-green active:bg-green-800">Bookmark 🔖</button>
         <select v-model="rating" class="mt-4 p-2 border border-gray-300 rounded">
@@ -91,7 +91,9 @@ if (store.userID) {
 }
 
 
-
+const editRecipe=()=>{
+  navigateTo('/EditRecipes/'+id)
+}
 const deleteRecipe=async()=>{
   const DELETE_RECIPE=gql`
   mutation MyMutation($RID: Int) {

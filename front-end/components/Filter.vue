@@ -1,7 +1,7 @@
 <template>
     <div class="w-full bg-gradient-to-r from-blue-600 to-green-500 p-6">
       <ul class="flex justify-evenly items-center h-full">
-        <li class="w-full bg-gradient-to-r from-blue-600 to-green-500 border-2">
+        <li class="w-full  border-2">
           <div>Category</div>
           <select v-model="recipeFilter.Category" defaultValue="Any" class="w-full">
             <option v-for="category in query.data.value.food_recipe_Categories" :value="category.name">{{ category.name }}</option>
@@ -21,7 +21,7 @@
         </li>
         <li class="w-full bg-slate-300 border-2">
           <div>Ingredient</div>
-          <div class="flex flex-wrap">
+          <div class="flex flex-wrap ">
             <button v-for="ingredient in ingredients.data.value.food_recipe_Ingredients" :key="ingredient.id" class="w-full md:w-auto bg-blue-500 text-white font-semibold py-2 px-4 rounded mr-2 mb-2" @click="recipeFilter.Ingredient.includes(ingredient.id) ?recipeFilter.Ingredient.splice(recipeFilter.Ingredient.indexOf(item), 1):recipeFilter.Ingredient.push(ingredient.id)" :class="{ 'bg-blue-500': !recipeFilter.Ingredient.includes(ingredient.id), 'bg-green-500': recipeFilter.Ingredient.includes(ingredient.id) }"> {{ ingredient.name }} </button>
         </div>
           <button  class="bg-blue-500 text-white px-3 py-1 rounded mt-4" @click="recipeFilter.SearchMethod = 3">Filter</button>

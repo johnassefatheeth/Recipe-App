@@ -148,7 +148,9 @@ const handleSubmit = async (values, actions) => {
         password:encryptedPassword
       });
       console.log(data);
+
   actions.resetForm();
+      navigateTo('/login')
     } catch (error) {
       console.log(error);
     }

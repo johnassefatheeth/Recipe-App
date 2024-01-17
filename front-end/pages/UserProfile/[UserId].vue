@@ -7,17 +7,18 @@
       <p class="mb-2 hover:text-blue-500">Created At: {{ formatTimestamp(query.data.value.food_recipe_Users_by_pk.created_at)  }}</p>
       <p class="mb-2 hover:text-blue-500">Average Rating: {{ query.data.value.food_recipe_Users_by_pk.Ratings_aggregate.aggregate.avg.rating }}</p>
       <p class="mb-2 hover:text-blue-500">Total Likes: {{ query.data.value.food_recipe_Users_by_pk.Likes_aggregate.aggregate.sum.recipe_id }}</p>
-      <div v-if="userId===store.userID">
-        {{ fetchBookmarks() }}
-        <h2>Bookmarked</h2>
+      <br>
+      <div v-if="userId==store.userID" class="float-end w-1/2"><br>
+        <h2 class="text-lg font-bold mb-2">Bookmarked</h2>
         <ul>
-          <li v-for="bookmark in bookmarks.data.value.food_recipe_Bookmarks" :key="bookmark.id">
+          <li v-for="bookmark in BookmarkedRecipes.data.value.food_recipe_Bookmarks" :key="bookmark.id">
             <NuxtLink :to="`/RecipeDetails/${bookmark.id}`" class="hover:text-blue-500">
+              
               <RecipeIntro
-                :title="bookmark.title"
-                :preparationTime="bookmark.preparation_time"
-                :catagory="bookmark.Category.name"
-                :rating="bookmark.Ratings_aggregate.aggregate.avg.rating"
+                :title="bookmark.Recipe.title"
+                :preparationTime="bookmark.Recipe.preparation_time"
+                :catagory="bookmark.Recipe.Category.name"
+                :rating="bookmark.Recipe.Ratings_aggregate.aggregate.avg.rating"
               />
             </NuxtLink>
           </li>
@@ -26,8 +27,8 @@
       
       </div>
       
-      <div class="mt-4">
-        <h2 class="text-lg font-bold mb-2">Recipes:</h2>
+      <div class="mt-4 float-start">
+        <h2 class="text-lg font-bold mb-2">Created Recipes:</h2>
         <ul class="flex flex-wrap">
   <li v-for="recipe in query.data.value.food_recipe_Users_by_pk.Recipes" :key="recipe.id" class="hover:bg-gray-100 transition-all duration-300 ease-in-out mr-4">
     <NuxtLink :to="`/RecipeDetails/${recipe.id}`" class="hover:text-blue-500">
@@ -60,8 +61,11 @@ onMounted(async() => {
 
 var enableEditing
 
-if(userId==store.userID)
+if(userId==store.userID){
+  fetchBookmarks()
   enableEditing=true
+
+}
 else
   enableEditing=false
 })
@@ -112,7 +116,7 @@ query MyQuery ($id: Int!) {
 `,{id:userId})
 
 
-const fetchBookmarks=async()=>{
+
   const BookmarkedRecipes=await useAsyncQuery(gql`
   query MyQuery($id:Int!) {
   food_recipe_Bookmarks(where: {user_id: {_eq: $id}}) {
@@ -120,11 +124,22 @@ const fetchBookmarks=async()=>{
       id
       preparation_time
       title
+      Category {
+        name
+      }
+      Ratings_aggregate {
+        aggregate {
+          avg {
+            rating
+          }
+        }
+      }
     }
   }
 }
   `,{id:userId})
-}
+
+  
 
 
 

@@ -1,7 +1,7 @@
 <template>
     <div
       @mouseleave="hoverOnBrowse = false"
-      class="absolute opacity-80 z-20 w-full h-20 bg-gradient-to-r from-blue-600 to-green-500 top-0 transition-all duration-300 ease-in-out "
+      class="absolute opacity-80 z-20 w-full h-20 bg-gradient-to-r from-blue-600 to-green-500 top-0 transition-all duration-300 ease-in-out hover:opacity-100 "
     > 
       <div class="w-1/5  h-20 float-left">
         <img class="h-full ml-4" src="../assets/image/food.png" alt="">
@@ -52,7 +52,7 @@
         >
           <NuxtLink
             @click="goToUser(store.userID)"
-            class="text-gray-300"
+            class="text-gray-300 hover:text-white transition-all duration-300 ease-in-out"
           >Your Profile</NuxtLink>
         </li>
         <li
@@ -60,14 +60,14 @@
           v-if="signedin"
           class=" m-4 hover:text-white transition-all duration-300 ease-in-out mr-8"
         >
-          <NuxtLink to="/AddRecipe" class="text-gray-300">Add Recipe</NuxtLink>
+          <NuxtLink to="/AddRecipe" class="text-gray-300 hover:text-white transition-all duration-300 ease-in-out">Add Recipe</NuxtLink>
         </li>
         <li
           @mouseover="hoverOnBrowse = false"
           v-if="signedin"
-          class="hover:text-white transition-all duration-300 ease-in-out mr-8"
+          class="hover:text-white transition-all duration-300 ease-in-out mr-8 "
         >
-          <NuxtLink @click="logout" class="text-gray-300">Logout</NuxtLink>
+          <NuxtLink @click="logout" class="text-gray-300 hover:text-white transition-all duration-300 ease-in-out">Logout</NuxtLink>
         </li>
       </ul>
   

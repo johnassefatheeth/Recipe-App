@@ -1,7 +1,6 @@
 <template>
   <div class="bg-gray-100">
-    <Navbar />
-    <br><br><br><br><br>
+    <Navbar /><br>
 
     <div class="container mx-auto px-4 py-16 text-center">
       <h1 class="text-4xl font-bold text-indigo-800 mb-8">Welcome to FOOD!</h1>
