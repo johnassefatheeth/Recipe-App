@@ -85,7 +85,46 @@ const props = defineProps({
         }`, { prp: props.myObject.PreparationTime });
         break;
       case 3:
-        // Query for search method 3
+        
+      queryResult.value = await useAsyncQuery(gql`
+          query MyQuery($ingname: String!) {
+  food_recipe_Recipes(where: {RecipeIngredients: {Ingredient: {name: {_eq: $ingname}}}}) {
+    title
+    preparation_time
+    Category {
+      name
+    }
+    id
+    User {
+      name
+      Likes_aggregate {
+        aggregate {
+          sum {
+            User_id
+          }
+        }
+      }
+    }
+    Image {
+      url
+    }
+    Likes_aggregate {
+      aggregate {
+        sum {
+          User_id
+        }
+      }
+    }
+    Ratings_aggregate {
+      aggregate {
+        avg {
+          rating
+        }
+      }
+    }
+  }
+}
+`, { ingname: props.myObject.Ingredient });
         break;
       case 4:
         queryResult.value = await useAsyncQuery(gql`query MyQuery ($User: String!) {
